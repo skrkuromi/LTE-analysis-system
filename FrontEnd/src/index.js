@@ -5,9 +5,9 @@ import MainPage from './MainPage';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <MainPage />
-  </React.StrictMode>,
+//   <React.StrictMode>
+    <MainPage />,
+//   </React.StrictMode>, 
   document.getElementById('root')
 );
 
