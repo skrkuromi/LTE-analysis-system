@@ -1,7 +1,7 @@
 import React from 'react';
 import {  } from 'antd';
 
-class C2IModel extends React.Component {
+class C2IInfoAnalysis extends React.Component {
 
     render() {
 
@@ -13,4 +13,4 @@ class C2IModel extends React.Component {
     }
 }
 
-export default C2IModel;
+export default C2IInfoAnalysis;

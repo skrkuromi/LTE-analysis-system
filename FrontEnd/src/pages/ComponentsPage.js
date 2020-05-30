@@ -6,14 +6,43 @@ import {
     SettingOutlined,
     AntDesignOutlined
 } from '@ant-design/icons';
+import {
+    Download,
+    C2IInfoAnalysis,
+    C2IInfoStatistics,
+    CellInfoQuery,
+    ENodeBInfoQuery,
+    KPIInfoQuery,
+    PRBInfoQuery,
+    PRBInfoStatistics,
+    UploadTest
+} from '../components';
 import { loginValues, loginInit } from '../utils/login.js';
 
 const { SubMenu } = Menu;
 
 class ComponentsPage extends React.Component {
+    state = {
+        key: 1
+    }
+
     handleClick = e => {
-        console.log('click ', e);
+        this.setState({ key: e.key })
     };
+
+    selectContent = () => {
+        switch (this.state.key) {
+            case 1: return <UploadTest></UploadTest>;
+            case 2: return <Download></Download>;
+            case 3: return <CellInfoQuery></CellInfoQuery>;
+            case 4: return <ENodeBInfoQuery></ENodeBInfoQuery>;
+            case 5: return <KPIInfoQuery></KPIInfoQuery>;
+            case 6: return <PRBInfoStatistics></PRBInfoStatistics>;
+            case 7: return <PRBInfoQuery></PRBInfoQuery>;
+            case 8: return <C2IInfoStatistics></C2IInfoStatistics>;
+            case 9: return <C2IInfoAnalysis></C2IInfoAnalysis>;
+        }
+    }
 
     logout = () => {
         let { username, password } = loginValues;
@@ -45,55 +74,64 @@ class ComponentsPage extends React.Component {
                     <a href="/" onClick={this.logout} style={{ alignItems: 'center', display: 'flex' }}>退出</a>
                 </div>
                 <div style={{ paddingTop: 30 }}>
-                    <Menu
-                        onClick={this.handleClick}
-                        style={{ width: 256, height: 'calc(100vh - 94px)' }}
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        mode="inline"
-                    >
-                        <SubMenu
-                            key="sub1"
-                            title={
-                                <span>
-                                    <DatabaseOutlined />
-                                    <span>数据导入/导出</span>
-                                </span>
-                            }
-                        >
-                            <Menu.Item key="1">数据导入</Menu.Item>
-                            <Menu.Item key="2">数据导出</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub2" icon={<SearchOutlined  />} title="信息查询">
-                            <Menu.Item key="3">小区配置信息查询</Menu.Item>
-                            <Menu.Item key="4">基站eNodeB信息查询</Menu.Item>
-                            <Menu.Item key="5">KPI指标信息查询</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub3"
-                            title={
-                                <span>
-                                    <SettingOutlined />
-                                    <span>PRB信息统计与查询</span>
-                                </span>
-                            }
-                        >
-                            <Menu.Item key="6">PRB信息统计</Menu.Item>
-                            <Menu.Item key="7">PRB信息查询</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub4"
-                            title={
-                                <span>
-                                    <SettingOutlined />
-                                    <span>主邻小区C2I干扰分析</span>
-                                </span>
-                            }
-                        >
-                            <Menu.Item key="8">C2I干扰分析统计</Menu.Item>
-                            <Menu.Item key="9">重叠覆盖干扰三元组查询</Menu.Item>
-                        </SubMenu>
-                    </Menu>
+                    <Row>
+                        <Col span={6}>
+                            <Menu
+                                onClick={this.handleClick}
+                                style={{ width: 256, height: 'calc(100vh - 94px)' }}
+                                defaultSelectedKeys={['1']}
+                                defaultOpenKeys={['sub1']}
+                                mode="inline"
+                            >
+                                <SubMenu
+                                    key="sub1"
+                                    title={
+                                        <span>
+                                            <DatabaseOutlined />
+                                            <span>数据导入/导出</span>
+                                        </span>
+                                    }
+                                >
+                                    <Menu.Item key="1">数据导入</Menu.Item>
+                                    <Menu.Item key="2">数据导出</Menu.Item>
+                                </SubMenu>
+                                <SubMenu key="sub2" icon={<SearchOutlined />} title="信息查询">
+                                    <Menu.Item key="3">小区配置信息查询</Menu.Item>
+                                    <Menu.Item key="4">基站eNodeB信息查询</Menu.Item>
+                                    <Menu.Item key="5">KPI指标信息查询</Menu.Item>
+                                </SubMenu>
+                                <SubMenu
+                                    key="sub3"
+                                    title={
+                                        <span>
+                                            <SettingOutlined />
+                                            <span>PRB信息统计与查询</span>
+                                        </span>
+                                    }
+                                >
+                                    <Menu.Item key="6">PRB信息统计</Menu.Item>
+                                    <Menu.Item key="7">PRB信息查询</Menu.Item>
+                                </SubMenu>
+                                <SubMenu
+                                    key="sub4"
+                                    title={
+                                        <span>
+                                            <SettingOutlined />
+                                            <span>主邻小区C2I干扰分析</span>
+                                        </span>
+                                    }
+                                >
+                                    <Menu.Item key="8">C2I干扰分析统计</Menu.Item>
+                                    <Menu.Item key="9">重叠覆盖干扰三元组查询</Menu.Item>
+                                </SubMenu>
+                            </Menu>
+
+                        </Col>
+                        <Col span={18}>
+                            {this.selectContent()}
+                        </Col>
+                    </Row>
+
                 </div>
             </div>
         );

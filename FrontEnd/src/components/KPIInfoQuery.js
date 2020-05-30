@@ -1,7 +1,7 @@
 import React from 'react';
 import {  } from 'antd';
 
-class QueryKPIInfo extends React.Component {
+class KPIInfoQuery extends React.Component {
 
     render() {
 
@@ -13,4 +13,4 @@ class QueryKPIInfo extends React.Component {
     }
 }
 
-export default QueryKPIInfo;
+export default KPIInfoQuery;

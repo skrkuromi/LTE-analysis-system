@@ -1,7 +1,7 @@
 import React from 'react';
 import {  } from 'antd';
 
-class QueryCellInfo extends React.Component {
+class CellInfoQuery extends React.Component {
 
     render() {
 
@@ -13,4 +13,4 @@ class QueryCellInfo extends React.Component {
     }
 }
 
-export default QueryCellInfo;
+export default CellInfoQuery;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {  } from 'antd';
 
-class QueryENodeBInfo extends React.Component {
+class C2IInfoStatistics extends React.Component {
 
     render() {
 
@@ -13,4 +13,4 @@ class QueryENodeBInfo extends React.Component {
     }
 }
 
-export default QueryENodeBInfo;
+export default C2IInfoStatistics;

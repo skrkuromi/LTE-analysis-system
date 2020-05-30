@@ -1,7 +1,7 @@
 import React from 'react';
 import {  } from 'antd';
 
-class PRBModel extends React.Component {
+class ENodeBInfoQuery extends React.Component {
 
     render() {
 
@@ -13,4 +13,4 @@ class PRBModel extends React.Component {
     }
 }
 
-export default PRBModel;
+export default ENodeBInfoQuery;
