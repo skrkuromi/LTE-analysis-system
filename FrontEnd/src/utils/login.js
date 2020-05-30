@@ -11,3 +11,11 @@ export function isLogin() {
 export function loginAction(values) {
     loginValues = values;
 }
+
+export function loginInit(values) {
+    loginValues = {
+        username: '',
+        password: '',
+        login: false,
+    };
+}

@@ -1,7 +1,12 @@
 import React from 'react';
-import { Menu, Row, Col, Divider } from 'antd';
-import { AntDesignOutlined } from '@ant-design/icons'
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { Menu, Row, Col } from 'antd';
+import {
+    SearchOutlined,
+    DatabaseOutlined,
+    SettingOutlined,
+    AntDesignOutlined
+} from '@ant-design/icons';
+import { loginValues, loginInit } from '../utils/login.js';
 
 const { SubMenu } = Menu;
 
@@ -10,7 +15,19 @@ class ComponentsPage extends React.Component {
         console.log('click ', e);
     };
 
+    logout = () => {
+        let { username, password } = loginValues;
+        let accountInfo = username + '&' + password + '&' + false;
+        let Days = 3;
+        let exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString();
+
+        loginInit();
+    }
+
     render() {
+        console.log(loginValues)
         return (
             <div>
                 <div style={{ height: 64, boxShadow: '0px 10px 10px -10px #f0f1f2', display: 'flex' }}>
@@ -24,11 +41,13 @@ class ComponentsPage extends React.Component {
                             </Col>
                         </Row>
                     </div>
+                    <div style={{ width: 1000, alignItems: 'center', display: 'flex' }}></div>
+                    <a href="/" onClick={this.logout} style={{ alignItems: 'center', display: 'flex' }}>退出</a>
                 </div>
-                <div style={{ paddingTop: 40 }}>
+                <div style={{ paddingTop: 30 }}>
                     <Menu
                         onClick={this.handleClick}
-                        style={{ width: 256, height: 'calc(100vh - 104px)' }}
+                        style={{ width: 256, height: 'calc(100vh - 94px)' }}
                         defaultSelectedKeys={['1']}
                         defaultOpenKeys={['sub1']}
                         mode="inline"
@@ -37,41 +56,42 @@ class ComponentsPage extends React.Component {
                             key="sub1"
                             title={
                                 <span>
-                                    <MailOutlined />
-                                    <span>Navigation One</span>
+                                    <DatabaseOutlined />
+                                    <span>数据导入/导出</span>
                                 </span>
                             }
                         >
-                            <Menu.ItemGroup key="g1" title="Item 1">
-                                <Menu.Item key="1">Option 1</Menu.Item>
-                                <Menu.Item key="2">Option 2</Menu.Item>
-                            </Menu.ItemGroup>
-                            <Menu.ItemGroup key="g2" title="Item 2">
-                                <Menu.Item key="3">Option 3</Menu.Item>
-                                <Menu.Item key="4">Option 4</Menu.Item>
-                            </Menu.ItemGroup>
+                            <Menu.Item key="1">数据导入</Menu.Item>
+                            <Menu.Item key="2">数据导出</Menu.Item>
                         </SubMenu>
-                        <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
-                            <Menu.Item key="5">Option 5</Menu.Item>
-                            <Menu.Item key="6">Option 6</Menu.Item>
-                            <SubMenu key="sub3" title="Submenu">
-                                <Menu.Item key="7">Option 7</Menu.Item>
-                                <Menu.Item key="8">Option 8</Menu.Item>
-                            </SubMenu>
+                        <SubMenu key="sub2" icon={<SearchOutlined  />} title="信息查询">
+                            <Menu.Item key="3">小区配置信息查询</Menu.Item>
+                            <Menu.Item key="4">基站eNodeB信息查询</Menu.Item>
+                            <Menu.Item key="5">KPI指标信息查询</Menu.Item>
+                        </SubMenu>
+                        <SubMenu
+                            key="sub3"
+                            title={
+                                <span>
+                                    <SettingOutlined />
+                                    <span>PRB信息统计与查询</span>
+                                </span>
+                            }
+                        >
+                            <Menu.Item key="6">PRB信息统计</Menu.Item>
+                            <Menu.Item key="7">PRB信息查询</Menu.Item>
                         </SubMenu>
                         <SubMenu
                             key="sub4"
                             title={
                                 <span>
                                     <SettingOutlined />
-                                    <span>Navigation Three</span>
+                                    <span>主邻小区C2I干扰分析</span>
                                 </span>
                             }
                         >
-                            <Menu.Item key="9">Option 9</Menu.Item>
-                            <Menu.Item key="10">Option 10</Menu.Item>
-                            <Menu.Item key="11">Option 11</Menu.Item>
-                            <Menu.Item key="12">Option 12</Menu.Item>
+                            <Menu.Item key="8">C2I干扰分析统计</Menu.Item>
+                            <Menu.Item key="9">重叠覆盖干扰三元组查询</Menu.Item>
                         </SubMenu>
                     </Menu>
                 </div>

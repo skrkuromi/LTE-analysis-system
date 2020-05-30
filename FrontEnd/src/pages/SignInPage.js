@@ -31,6 +31,7 @@ class SignInPage extends React.Component {
             username = i[0];
             password = i[1];
             login = i[2];
+            login = login === 'false' ? false : true;
             let values = { username, password, login };
             loginAction(values);
         }
