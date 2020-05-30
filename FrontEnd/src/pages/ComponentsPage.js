@@ -23,7 +23,7 @@ const { SubMenu } = Menu;
 
 class ComponentsPage extends React.Component {
     state = {
-        key: 1
+        key: '1'
     }
 
     handleClick = e => {
@@ -32,15 +32,15 @@ class ComponentsPage extends React.Component {
 
     selectContent = () => {
         switch (this.state.key) {
-            case 1: return <UploadTest></UploadTest>;
-            case 2: return <Download></Download>;
-            case 3: return <CellInfoQuery></CellInfoQuery>;
-            case 4: return <ENodeBInfoQuery></ENodeBInfoQuery>;
-            case 5: return <KPIInfoQuery></KPIInfoQuery>;
-            case 6: return <PRBInfoStatistics></PRBInfoStatistics>;
-            case 7: return <PRBInfoQuery></PRBInfoQuery>;
-            case 8: return <C2IInfoStatistics></C2IInfoStatistics>;
-            case 9: return <C2IInfoAnalysis></C2IInfoAnalysis>;
+            case '1': return <UploadTest></UploadTest>;
+            case '2': return <Download></Download>;
+            case '3': return <CellInfoQuery></CellInfoQuery>;
+            case '4': return <ENodeBInfoQuery></ENodeBInfoQuery>;
+            case '5': return <KPIInfoQuery></KPIInfoQuery>;
+            case '6': return <PRBInfoStatistics></PRBInfoStatistics>;
+            case '7': return <PRBInfoQuery></PRBInfoQuery>;
+            case '8': return <C2IInfoStatistics></C2IInfoStatistics>;
+            case '9': return <C2IInfoAnalysis></C2IInfoAnalysis>;
         }
     }
 
@@ -56,7 +56,6 @@ class ComponentsPage extends React.Component {
     }
 
     render() {
-        console.log(loginValues)
         return (
             <div>
                 <div style={{ height: 64, boxShadow: '0px 10px 10px -10px #f0f1f2', display: 'flex' }}>
