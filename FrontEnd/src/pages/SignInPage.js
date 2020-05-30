@@ -1,16 +1,12 @@
 import React from 'react';
-import { Row, Col, Card, Form, Input, Button, message, Icon, Checkbox, notification } from 'antd';
-import { Redirect, Link } from 'react-router-dom';
+import { Row, Col, Card, Form, Input, Button, Checkbox } from 'antd';
+import { Redirect } from 'react-router-dom';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { loginValues, loginAction } from '../utils/login.js';
 
-const FormItem = Form.Item;
 class SignInPage extends React.Component {
     state = {
-        redirect: false,
-        username: '',
-        password: '',
-        remind: '',
-        rememberPassword: false,
-        fromPath: '/'
+        toPath: '/components',
     }
 
     loadAccountInfo = () => {
@@ -26,20 +22,17 @@ class SignInPage extends React.Component {
         if (Boolean(accountInfo) === false) {
             return false;
         } else {
-            let userName = "";
-            let passWord = "";
-            let Remind = "";
+            let username = "";
+            let password = "";
+            let login = "";
 
             let i = new Array()
             i = accountInfo.split("&");
-            userName = i[0];
-            passWord = i[1];
-            Remind = i[2];
-            this.setState({
-                username: userName,
-                password: passWord,
-                remind: Remind
-            })
+            username = i[0];
+            password = i[1];
+            login = i[2];
+            let values = { username, password, login };
+            loginAction(values);
         }
     }
 
@@ -47,106 +40,102 @@ class SignInPage extends React.Component {
         this.loadAccountInfo();
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        let userInfo = this.props.form.getFieldsValue();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                let formData = new FormData();
-                formData.append("telephone", values.username);
-                formData.append("passCode", values.password);
+    handleSubmit = (values) => {
+        console.log(values);
+        let { username, password, remember } = values;
 
-                const init = {
-                    method: 'POST',
-                    body: formData,
-                }
-                fetch("http://localhost:8080/login", init)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        if (data) {
-                            if (values.remember) {
-                                let accountInfo = '';
-                                if (this.state.remind === '')
-                                    accountInfo = values.username + '&' + values.password + '&' + 'true';
-                                else accountInfo = values.username + '&' + values.password + '&' + this.state.remind;
-                                let Days = 3;
-                                let exp = new Date();
-                                exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
-                                document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString()
-                            }
-                            this.setState({ redirect: true });
-                            message.success(`${userInfo.username}, welcome`);
-                        }
-                        else {
-                            alert('Password error');
-                        }
-                    }
-                    )
+        if (username === 'demo' && password === 'demo') {
+            if (remember) {
+                let accountInfo = username + '&' + password + '&' + true;
+                let Days = 3;
+                let exp = new Date();
+                exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+                document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString();
             }
-        })
+            let values = { username, password, login: true }
+            loginAction(values);
+            this.props.history.push({ pathname: '/components' });
+        }
+        else {
+            alert('Password error');
+        }
+
+        // let formData = new FormData();
+        // formData.append("telephone", values.username);
+        // formData.append("passCode", values.password);
+
+        // const init = {
+        //     method: 'POST',
+        //     body: formData,
+        // }
+
+        // fetch("http://localhost:8080/login", init)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data)
+        //         if (data) {
+        //             if (values.remember) {
+        //                 let accountInfo = '';
+        //                 if (this.state.remind === '')
+        //                     accountInfo = values.username + '&' + values.password + '&' + 'true';
+        //                 else accountInfo = values.username + '&' + values.password + '&' + this.state.remind;
+        //                 let Days = 3;
+        //                 let exp = new Date();
+        //                 exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        //                 document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString()
+        //             }
+        //             this.setState({ redirect: true });
+        //             message.success(`${userInfo.username}, welcome`);
+        //         }
+        //         else {
+        //             alert('Password error');
+        //         }
+        //     })
     }
 
     render() {
-        if (this.state.redirect) {
-            notification['success']({
-                message: "欢迎来到Travel Helper",
-                duration: 1
-            });
-            this.setState({ redirect: false })
-            return <Redirect to={this.state.fromPath} />;
+        if (loginValues.login) {
+            return <Redirect to={this.state.toPath} />;
         }
-
         return (
-            //<div  style={{backgroundImage: `url(${background})`,backgroundSize: 'cover'}}>
             <div>
-                <Row style={{ height: 150 }}></Row>
-                <Row style={{ height: 650 }}>
+                <Row style={{ height: 100 }}></Row>
+                <Row>
                     <Col span={8} />
-                    <Col span={8}>
-                        <Card title="账户登录" color='black' >
-                            <Form onSubmit={this.handleSubmit} className="login-form">
-                                <FormItem
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: '用户名不能为空'
-                                        },
-                                        {
-                                            min: 4, max: 20,
-                                            message: '长度最小为4,最长为20'
-                                        },
-                                        {
-                                            pattern: new RegExp('^\\w+$', 'g'),
-                                            message: '用户名必须为有效数字与字符或下划线'
-                                        }
-                                    ]}
+                    <Col span={8} style={{ padding: 70 }}>
+                        <Card title="账户登录" color='black' style={{ maxWidth: 350, minWidth: 350 }}>
+                            <Form onFinish={this.handleSubmit} className="login-form" initialValues={{ remember: true }}>
+                                <Form.Item
+                                    name="username"
+                                    rules={[{ required: true, message: '请输入用户名!' }]}
+                                >
+                                    <Input prefix={<UserOutlined />} placeholder="Username:demo" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="password"
+                                    rules={[{ required: true, message: '请输入密码!' }]}
                                 >
                                     <Input
-                                        prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                        placeholder='username:13781111111'
-                                    ></Input>
-                                </FormItem>
-                                <FormItem
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: '密码不能为空'
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                        placeholder='password:bupt123456' type='password'
-                                    ></Input>
-                                </FormItem>
-                                <FormItem>
-                                    <Checkbox>记住我</Checkbox>
-                                    <Row>
-                                        <Button type='primary' htmlType="submit" style={{ width: '100%' }}>登录</Button>
-                                    </Row>
-                                    <a href='/'>忘记密码</a>
-                                </FormItem>
+                                        prefix={<LockOutlined />}
+                                        type="password"
+                                        placeholder="Password:demo"
+                                    />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Form.Item name="remember" valuePropName="checked" noStyle>
+                                        <Checkbox>记住我</Checkbox>
+                                    </Form.Item>
+
+                                    <a style={{ float: 'right' }} href="">
+                                        注册新账户
+                                    </a>
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                                        登录
+                                    </Button>
+                                </Form.Item>
                             </Form>
                         </Card>
                     </Col>
