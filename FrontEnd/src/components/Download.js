@@ -1,8 +1,20 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Select } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
+const { Option } = Select;
+
 class Download extends React.Component {
+    state = {
+        tableName: null
+    }
+
+    onChange = (value) => {
+        this.setState({
+            tableName: value
+        })
+    }
+
     //将数据转化为文件所用格式
     makeFile = (e) => {
         e.stopPropagation();
@@ -37,12 +49,32 @@ class Download extends React.Component {
         element.click();
         document.body.removeChild(element);
     }
-    render() {
-        return (
-            <Button shape="round" onClick={this.makeFile} icon={<DownloadOutlined />} size='large'>
-                Download
-            </Button>
 
+    render() {
+        console.log(this.state.tableName)
+        return (
+            <div>
+                <Select
+                    showSearch
+                    style={{ width: 200, marginRight: 20 }}
+                    placeholder="Select tableName"
+                    optionFilterProp="children"
+                    onChange={this.onChange}
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                    <Option value="jack">Jack</Option>
+                    <Option value="jack">Jack</Option>
+                    <Option value="jack">Jack</Option>
+                    <Option value="jack">Jack</Option>
+                    <Option value="lucy">Lucy</Option>
+                    <Option value="tom">Tom</Option>
+                </Select>
+                <Button onClick={this.makeFile} icon={<DownloadOutlined />}>
+                    Download
+                </Button>
+            </div>
         );
     }
 }

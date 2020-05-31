@@ -1,13 +1,16 @@
 import React from 'react';
-import {  } from 'antd';
+import { Button } from 'antd';
 
 class PRBInfoStatistics extends React.Component {
+    handleClick = () => {
+
+    }
 
     render() {
 
         return (
             <div>
-                Component
+                <Button onClick={this.handleClick}>生成PRBnew</Button>
             </div>
         );
     }

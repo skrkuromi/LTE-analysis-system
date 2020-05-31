@@ -23,7 +23,7 @@ const { SubMenu } = Menu;
 
 class ComponentsPage extends React.Component {
     state = {
-        key: '1'
+        key: '3'
     }
 
     handleClick = e => {

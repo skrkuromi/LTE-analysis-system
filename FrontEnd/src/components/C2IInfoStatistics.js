@@ -1,13 +1,16 @@
 import React from 'react';
-import {  } from 'antd';
+import { Button } from 'antd';
 
 class C2IInfoStatistics extends React.Component {
+    handleClick = () => {
+
+    }
 
     render() {
 
         return (
             <div>
-                Component
+                <Button onClick={this.handleClick}>生成C2Inew</Button>
             </div>
         );
     }
