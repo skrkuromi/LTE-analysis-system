@@ -13,6 +13,19 @@ func main() {
 	r := gin.Default()
 	r.POST("/login", api.Login)
 	r.POST("/register", api.Register)
+	r.POST("/upload", api.Upload)
+	tbcell := r.Group("/tbcell")
+	{
+		tbcell.GET("/sector_id", api.QueryAllSectorId)
+		tbcell.GET("/sector_name", api.QueryAllSectorName)
+		tbcell.GET("/enodeb_id", api.QueryAllEnodebId)
+		tbcell.GET("/enodeb_name", api.QueryAllEnodebName)
+		tbcell.GET("/query_by_sector_id", api.QueryInfoBySectorId)
+		tbcell.GET("/query_by_sector_name", api.QueryInfoBySectorName)
+		tbcell.GET("/query_by_enodeb_id", api.QueryInfoByEnodebId)
+		tbcell.GET("/query_by_enodeb_name", api.QueryInfoByEnodebName)
+	}
+
 	if err := r.Run(fmt.Sprintf(":%d", setting.HttpPort)); err != nil {
 		log.Fatal(err.Error())
 	}
