@@ -1,8 +1,8 @@
-package controller
+package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"server/dao"
+	"server/models"
 )
 
 func Register(c *gin.Context) {
@@ -10,10 +10,10 @@ func Register(c *gin.Context) {
 	password := c.PostForm("password")
 	success := false
 	msg := ""
-	if dao.GetPassByUserName(username) != "" {
+	if models.GetPassByUserName(username) != "" {
 		msg = "该用户名已被注册"
 	} else {
-		dao.InsertNewUser(dao.User{UserName: username, Password: password})
+		models.InsertNewUser(models.User{UserName: username, Password: password})
 		msg = "注册成功"
 		success = true
 	}

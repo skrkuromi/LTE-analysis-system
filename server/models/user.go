@@ -1,4 +1,8 @@
-package dao
+package models
+
+import (
+	"log"
+)
 
 type User struct {
 	UserName string `db:"username"`
@@ -7,11 +11,15 @@ type User struct {
 
 func GetPassByUserName(username string) (password string) {
 	sqlString := "select password from user where username = ?"
-	_ = DB.Get(&password, sqlString, username)
+	if err := db.Get(&password, sqlString, username); err != nil {
+		log.Fatal(err.Error())
+	}
 	return
 }
 
-func InsertNewUser(user User){
+func InsertNewUser(user User) {
 	sqlString := "insert into user(username, password) values(?, ?)"
-	_, _ = DB.Exec(sqlString, user.UserName, user.Password)
+	if _, err := db.Exec(sqlString, user.UserName, user.Password); err != nil {
+		log.Fatal(err.Error())
+	}
 }
