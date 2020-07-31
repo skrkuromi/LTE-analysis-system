@@ -25,7 +25,15 @@ func main() {
 		tbcell.GET("/query_by_enodeb_id", api.QueryInfoByEnodebId)
 		tbcell.GET("/query_by_enodeb_name", api.QueryInfoByEnodebName)
 	}
-
+    tbKPI := r.Group("/tbKPI")
+	{
+		tbKPI.GET("/allKPIInfo", api.QueryAllKPIInfo)
+		tbKPI.GET("/KPIAtt_by_enodeb_id", api.QueryKPIAttByEnodebName)
+	}
+	tbPRBnew := r.Group("/tbPRBnew")
+	{
+		tbPRBnew.GET("/PRBInfo_by_enodeb_name", api.QueryPRBInfoByEnodeName)
+	}
 	if err := r.Run(fmt.Sprintf(":%d", setting.HttpPort)); err != nil {
 		log.Fatal(err.Error())
 	}
