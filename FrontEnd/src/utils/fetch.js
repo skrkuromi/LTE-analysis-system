@@ -1,8 +1,10 @@
-const url = "http://localhost:8080";
+// const url = "http://localhost:8080";
+const url = "";
 
 const init = {
     method: 'POST',
-    mode: 'no-cors',
+    // mode: 'no-cors',
+    mode: 'cors',
     headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
     },
@@ -17,10 +19,11 @@ export async function fetchTool(route, form) {
         body += `${i}=${form[i]}`;
     }
     if (body !== "") init['body'] = body;
-    console.log(init)
     const res = await fetch(url + route, init);
 
-    console.log(res.success)
-
-    return await res.text();
+    if (res.status === 200) {
+        return await res.json();
+    } else {
+        return { status: 500 };
+    }
 }

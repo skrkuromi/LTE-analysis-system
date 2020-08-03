@@ -50,8 +50,7 @@ class SignInPage extends React.Component {
         var result = await fetchTool('/login', { username, password });
         console.log(result)
 
-        if (username === 'demo' && password === 'demo') {
-            console.log("----------------")
+        if (result.status !== 500 && result.success === true) {
             if (remember) {
                 let accountInfo = username + '&' + password + '&' + true;
                 let Days = 3;
@@ -64,40 +63,8 @@ class SignInPage extends React.Component {
             this.props.history.push({ pathname: '/components' });
         }
         else {
-            alert('Password error');
+            alert('密码错误');
         }
-
-        // let formData = new FormData();
-        // formData.append("telephone", values.username);
-        // formData.append("passCode", values.password);
-
-        // const init = {
-        //     method: 'POST',
-        //     body: formData,
-        // }
-
-        // fetch("http://localhost:8080/login", init)
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log(data)
-        //         if (data) {
-        //             if (values.remember) {
-        //                 let accountInfo = '';
-        //                 if (this.state.remind === '')
-        //                     accountInfo = values.username + '&' + values.password + '&' + 'true';
-        //                 else accountInfo = values.username + '&' + values.password + '&' + this.state.remind;
-        //                 let Days = 3;
-        //                 let exp = new Date();
-        //                 exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
-        //                 document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString()
-        //             }
-        //             this.setState({ redirect: true });
-        //             message.success(`${userInfo.username}, welcome`);
-        //         }
-        //         else {
-        //             alert('Password error');
-        //         }
-        //     })
     }
 
     render() {
@@ -133,7 +100,7 @@ class SignInPage extends React.Component {
                                         <Checkbox>记住我</Checkbox>
                                     </Form.Item>
 
-                                    <a style={{ float: 'right' }} href="">
+                                    <a style={{ float: 'right' }} href="/#/register">
                                         注册新账户
                                     </a>
                                 </Form.Item>
