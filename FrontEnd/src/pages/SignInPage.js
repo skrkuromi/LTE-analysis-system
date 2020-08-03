@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { loginValues, loginAction } from '../utils/login.js';
 
+import { fetchTool } from '../utils/fetch';
+
 class SignInPage extends React.Component {
     state = {
         toPath: '/components',
@@ -41,11 +43,15 @@ class SignInPage extends React.Component {
         this.loadAccountInfo();
     }
 
-    handleSubmit = (values) => {
+    handleSubmit = async (values) => {
         console.log(values);
         let { username, password, remember } = values;
 
+        var result = await fetchTool('/login', { username, password });
+        console.log(result)
+
         if (username === 'demo' && password === 'demo') {
+            console.log("----------------")
             if (remember) {
                 let accountInfo = username + '&' + password + '&' + true;
                 let Days = 3;

@@ -10,8 +10,8 @@ class HomePage extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/" component={SignInPage} />
-                    <PrivateRoute path="/components" component={ComponentsPage}></PrivateRoute>
+                    <Route exact path="/" component={SignInPage}/>
+                    <PrivateRoute path="/components" component={ComponentsPage}/>
                 </Switch>
             </Router>
         );
