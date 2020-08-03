@@ -5,12 +5,14 @@ import (
 	"server/models"
 )
 
-func QueryAllSector(c *gin.Context) {
-	tp := c.Query("type")
-	info := models.GetAllSector(tp)
-	c.JSON(200, gin.H{"msg": info})
+func QueryAllSectorId(c *gin.Context) {
+	ids := models.GetAllSectorID()
+	c.JSON(200, gin.H{"msg": ids})
 }
-
+func QueryAllSectorName(c *gin.Context) {
+	names := models.GetAllSectorName()
+	c.JSON(200, gin.H{"msg": names})
+}
 func QueryAllEnodebId(c *gin.Context) {
 	ids := models.GetAllEnodebID()
 	c.JSON(200, gin.H{"msg": ids})

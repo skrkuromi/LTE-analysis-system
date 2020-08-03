@@ -27,12 +27,18 @@ type tbcell struct{
 	TOTLETILT		sql.NullFloat64	`db:"TOTLETILT"`
 }
 
-func GetAllSector(tp string)(info []string){
+func GetAllSectorID()(ids []string){
 	sqlString := "select distinct SECTOR_ID from tbcell"
-	if(tp == "NAME") {
-		sqlString = "select distinct SECTOR_NAME from tbcell"
+	if err := db.Select(&ids, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
 	}
-	if err := db.Select(&info, sqlString); err != nil {
+	return
+}
+
+func GetAllSectorName()(names []string){
+	sqlString := "select distinct SECTOR_NAME from tbcell"
+	if err := db.Select(&names, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return
 	}
