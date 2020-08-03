@@ -12,9 +12,7 @@ type User struct {
 
 func GetPassByUserName(username string) (password string) {
 	sql := "select password from user where username = ?"
-	if err := db.Get(&password, sql, username); err != nil {
-		log.Fatal(err.Error())
-	}
+	db.Get(&password, sql, username)
 	return
 }
 
