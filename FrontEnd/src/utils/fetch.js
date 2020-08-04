@@ -1,8 +1,7 @@
 // const url = "http://localhost:8080";
 const url = "";
 
-const init = {
-    method: 'POST',
+const constantInit = {
     // mode: 'no-cors',
     mode: 'cors',
     headers: {
@@ -10,7 +9,10 @@ const init = {
     },
 };
 
-export async function fetchTool(route, form) {
+export async function fetchTool(type, route, form) {
+    const init = JSON.parse(JSON.stringify(constantInit));
+
+    init['method'] = type;
     let body = ""
     for (let i in form) {
         if (body !== "") {
@@ -18,7 +20,14 @@ export async function fetchTool(route, form) {
         }
         body += `${i}=${form[i]}`;
     }
-    if (body !== "") init['body'] = body;
+    if (body !== "") {
+        if (type === "GET") {
+            route += '?' + body
+        } else {
+            init['body'] = body;
+        }
+    }
+
     const res = await fetch(url + route, init);
 
     if (res.status === 200) {

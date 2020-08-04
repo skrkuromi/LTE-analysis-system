@@ -10,7 +10,7 @@ class RegisterPage extends React.Component {
         console.log(values);
         let { username, password } = values;
 
-        var result = await fetchTool('/register', { username, password });
+        var result = await fetchTool('POST', '/register', { username, password });
         console.log(result)
 
         if (result.status !== 500) {

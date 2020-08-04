@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"log"
+	"fmt"
 )
 
 type tbcell struct{
@@ -29,6 +30,7 @@ type tbcell struct{
 
 func GetAllSectorID()(ids []string){
 	sqlString := "select distinct SECTOR_ID from tbcell"
+	fmt.Println("-------------------")
 	if err := db.Select(&ids, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return
