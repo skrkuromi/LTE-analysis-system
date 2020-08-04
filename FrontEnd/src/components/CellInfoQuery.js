@@ -29,7 +29,7 @@ class CellInfoQuery extends React.Component {
         const { type, value } = this.state;
 
         if (value === undefined) {
-            alert("请输入ID或Name");
+            alert("请输入小区的ID或Name");
             return
         }
 

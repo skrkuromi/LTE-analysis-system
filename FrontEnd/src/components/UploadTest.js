@@ -1,20 +1,20 @@
 import React from 'react';
 import { Upload, message, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import Papa from 'papaparse'
-import XLSX from 'xlsx'
+import Papa from 'papaparse';
+import XLSX from 'xlsx';
 
 const props = {
     beforeUpload: file => {
         console.log(file);
         var fileType = file.name.split(".")[1];
-        if (fileType === 'csv') {  
+        if (fileType === 'csv') {
             Papa.parse(file, {
                 // 按行处理
-                step: function(row) {
+                step: function (row) {
                     console.log("Row:", row.data);
                 },
-                complete: function() {
+                complete: function () {
                     console.log("All done!");
                 }
             });
@@ -28,11 +28,11 @@ const props = {
             // records at the end of the logical file, while CFB files can place the 
             // storage info anywhere in the file! As a result, to properly handle these
             // formats, a streaming function would have to buffer the entire file before commencing.
-     
+
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 var data = new Uint8Array(e.target.result);
-                var workbook = XLSX.read(data, {type: 'array'});
+                var workbook = XLSX.read(data, { type: 'array' });
                 console.log(workbook)
             };
             reader.readAsArrayBuffer(file);
@@ -45,11 +45,11 @@ const props = {
 };
 
 const UploadTest = () => (
-     <Upload {...props}>
-         <Button>
+    <Upload {...props}>
+        <Button>
             <UploadOutlined /> Click to Upload
          </Button>
-    </Upload> 
+    </Upload>
 )
 
 export default UploadTest;

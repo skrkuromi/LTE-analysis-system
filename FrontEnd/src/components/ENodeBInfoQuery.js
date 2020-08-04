@@ -1,95 +1,113 @@
 import React from 'react';
 import { Select, Button, Table } from 'antd';
+import { fetchTool } from '../utils/fetch';
 
 const { Option } = Select;
-let timeout;
-let currentValue;
+
 class ENodeBInfoQuery extends React.Component {
     state = {
         type: 'ENODEBID',
-        cell: null,
-        data: [],
         value: undefined,
+        eNodeBID: [],
+        eNodeBName: [],
+        data: [],
     }
 
     handleChange = (value) => {
         this.setState({
-            type: value
+            type: value,
+            value: undefined
         })
     }
 
     onChange = (value) => {
-        console.log(`selected ${value}`);
-    }
-
-    handleClickQuery = () => {
-
-    }
-
-    fetch = (value, callback) => {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-        currentValue = value;
-
-        const data = [];
-        data.push({
-            value: '9',
-            text: '9999',
-        });
-        data.push({
-            value: '00',
-            text: '0000',
-        });
         this.setState({
-            data
+            value
         })
-
-        timeout = setTimeout(this.fetch, 300);
     }
 
-    dropdownChange = () => {
-        console.log('---')
-        this.fetch('q', data => this.setState({ data }));
+    handleClickQuery = async () => {
+        const { type, value } = this.state;
+
+        if (value === undefined) {
+            alert("请输入eNodeB的ID或Name!");
+            return
+        }
+
+        let sector = [];
+        if (type === "ENODEBID") {
+            const result = await fetchTool('GET', '/tbcell/query_by_enodeb_id', { enodeb_id: value });
+            if (result.status === undefined) {
+                sector = result.msg;
+            }
+        } else if (type === "ENODEB_NAME") {
+            const result = await fetchTool('GET', '/tbcell/query_by_enodeb_name', { enodeb_name: value });
+            if (result.status === undefined) {
+                sector = result.msg;
+            }
+        }
+
+        for (let i = 0; i < sector.length; i++) {
+            let currentSector = sector[i];
+            for (let value in currentSector) {
+                if (currentSector[value].Valid === false) {
+                    currentSector[value] = "NULL";
+                } else if (currentSector[value].Valid === true) {
+                    currentSector[value] = currentSector[value].Float64;
+                }
+            }
+            currentSector['key'] = i;
+        }
+
+        this.setState({ data: sector });
+    }
+
+    dropdownChange = async () => {
+        const { type, eNodeBID, eNodeBName } = this.state;
+
+        if (type === "ENODEBID" && eNodeBID.length === 0) {
+            const result = await fetchTool('GET', '/tbcell/enodeb_id', {});
+            if (result.status === undefined) {
+                this.setState({
+                    eNodeBID: result.msg
+                })
+            }
+        } else if (type === "ENODEB_NAME" && eNodeBName.length === 0) {
+            const result = await fetchTool('GET', '/tbcell/enodeb_name', {});
+            if (result.status === undefined) {
+                this.setState({
+                    eNodeBName: result.msg
+                })
+            }
+        }
     }
 
     render() {
-        const dataSource = [
-            {
-                name: '胡彦斌',
-                age: 32,
-                address: '西湖区湖底公园1号',
-            },
-            {
-                name: '胡彦祖',
-                age: 42,
-                address: '西湖区湖底公园1号',
-            },
-        ];
-        const columns = [
-            {
-                title: '姓名',
-                dataIndex: 'name',
-                key: 'name',
-            },
-            {
-                title: '年龄',
-                dataIndex: 'age',
-                key: 'age',
-            },
-            {
-                title: '住址',
-                dataIndex: 'address',
-                key: 'address',
-            },
-        ];
+        const { type, eNodeBID, eNodeBName, data } = this.state;
+        const options = type === "ENODEBID" ?
+            eNodeBID.map(data => <Option key={data}>{data}</Option>)
+            : eNodeBName.map(data => <Option key={data}>{data}</Option>);
+
+        const columns = [];
         let width = 1000;
-        const options = this.state.data.map(d => <Option key={d.value}>{d.text}</Option>);
+        let column = data[0] || [];
+
+        for (let value in column) {
+            columns.push({
+                title: value,
+                dataIndex: value,
+                key: value
+            })
+        }
+
         return (
             <div>
                 <div>
-                    <Select defaultValue="ENODEBID" style={{ width: 120, marginRight: 20 }} onChange={this.handleChange}>
+                    <Select
+                        defaultValue="ENODEBID"
+                        style={{ width: 120, marginRight: 20 }}
+                        onChange={this.handleChange}
+                    >
                         <Option value="ENODEBID">基站ID</Option>
                         <Option value="ENODEB_NAME">基站名称</Option>
                     </Select>
@@ -111,7 +129,7 @@ class ENodeBInfoQuery extends React.Component {
                 <div style={{ paddingTop: 50 }}>
                     <Table
                         columns={columns}
-                        dataSource={dataSource}
+                        dataSource={data}
                         bordered
                         scroll={{ x: width < 1000 ? width : 1000 }}
                         size='small'
