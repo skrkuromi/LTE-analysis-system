@@ -6,8 +6,13 @@ import (
 )
 
 func Init_tbC2Inew(c *gin.Context) {
-
-	temp := models.GetC2I_MeanStd()
-
-	c.JSON(200, gin.H{"msg": temp})
+	info := models.GetC2I_MeanStd()
+	c.JSON(200, gin.H{"msg": info})
 }
+
+func GetTripleSector(c *gin.Context){
+	info := models.GetTriplePerfect()
+	c.JSON(200, gin.H{"msg": info})
+}
+
+
