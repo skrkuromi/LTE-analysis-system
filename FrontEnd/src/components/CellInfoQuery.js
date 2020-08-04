@@ -1,97 +1,95 @@
 import React from 'react';
-import { Select, Button, Table } from 'antd';
+import { Select, Button, List } from 'antd';
+import { fetchTool } from '../utils/fetch';
 
 const { Option } = Select;
-let timeout;
-let currentValue;
 class CellInfoQuery extends React.Component {
     state = {
         type: 'SECTOR_ID',
-        cell: null,
-        data: [],
         value: undefined,
+        sectorID: [],
+        sectorName: [],
+        data: [],
     }
 
     handleChange = (value) => {
         this.setState({
-            type: value
+            type: value,
+            value: undefined
         })
     }
 
     onChange = (value) => {
-        console.log(`selected ${value}`);
-    }
-
-    handleClickQuery = () => {
-
-    }
-
-    fetch = (value, callback) => {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-        currentValue = value;
-
-        const data = [];
-        data.push({
-            value: '9',
-            text: '9999',
-        });
-        data.push({
-            value: '00',
-            text: '0000',
-        });
         this.setState({
-            data
+            value
         })
-
-        timeout = setTimeout(this.fetch, 300);
     }
 
-    dropdownChange = () => {
-        console.log('---')
-        this.fetch('q', data => this.setState({ data }));
+    handleClickQuery = async () => {
+        const { type, value } = this.state;
+
+        if (value === undefined) {
+            alert("请输入ID或Name");
+            return
+        }
+
+        if (type === "SECTOR_ID") {
+            const result = await fetchTool('GET', '/tbcell/query_by_sector_id', { sector_id: value });
+            if (result.status === undefined) {
+                const data = [];
+                const sector = result.msg[0];
+                console.log(result)
+                for (let value in sector) {
+                    data.push(value + "：" + sector[value]);
+                }
+                this.setState({ data });
+            }
+        } else if (type === "SECTOR_NAME") {
+            const result = await fetchTool('GET', '/tbcell/query_by_sector_name', { sector_name: value });
+            if (result.status === undefined) {
+                const data = [];
+                const sector = result.msg[0];
+                for (let value in sector) {
+                    data.push(value + "：" + sector[value]);
+                }
+                this.setState({ data });
+            }
+        }
+    }
+
+    dropdownChange = async () => {
+        const { type, sectorID, sectorName } = this.state;
+
+        if (type === "SECTOR_ID" && sectorID.length === 0) {
+            const result = await fetchTool('GET', '/tbcell/sector_id', {});
+            if (result.status === undefined) {
+                this.setState({
+                    sectorID: result.msg
+                })
+            }
+        } else if (type === "SECTOR_NAME" && sectorName.length === 0) {
+            const result = await fetchTool('GET', '/tbcell/sector_name', {});
+            if (result.status === undefined) {
+                this.setState({
+                    sectorName: result.msg
+                })
+            }
+        }
     }
 
     render() {
-        const dataSource = [
-            {
-                name: '胡彦斌',
-                age: 32,
-                address: '西湖区湖底公园1号',
-                key: '1'
-            },
-            {
-                name: '胡彦祖',
-                age: 42,
-                address: '西湖区湖底公园1号',
-                key: '2'
-            },
-        ];
-        const columns = [
-            {
-                title: '姓名',
-                dataIndex: 'name',
-                key: 'name',
-            },
-            {
-                title: '年龄',
-                dataIndex: 'age',
-                key: 'age',
-            },
-            {
-                title: '住址',
-                dataIndex: 'address',
-                key: 'address',
-            },
-        ];
-        let width = 1000;
-        const options = this.state.data.map(d => <Option key={d.value}>{d.text}</Option>);
+        const { type, sectorID, sectorName, data } = this.state;
+        const options = type === "SECTOR_ID" ?
+            sectorID.map(data => <Option key={data}>{data}</Option>)
+            : sectorName.map(data => <Option key={data}>{data}</Option>);
         return (
             <div>
                 <div>
-                    <Select defaultValue="SECTOR_ID" style={{ width: 120, marginRight: 20 }} onChange={this.handleChange}>
+                    <Select
+                        defaultValue="SECTOR_ID"
+                        style={{ width: 120, marginRight: 20 }}
+                        onChange={this.handleChange}
+                    >
                         <Option value="SECTOR_ID">小区ID</Option>
                         <Option value="SECTOR_NAME">小区名称</Option>
                     </Select>
@@ -110,15 +108,12 @@ class CellInfoQuery extends React.Component {
                     </Select>
                     <Button onClick={this.handleClickQuery}>查询</Button>
                 </div>
-                <div style={{ paddingTop: 50 }}>
-                    <Table
-                        columns={columns}
-                        dataSource={dataSource}
+                <div style={{ paddingTop: 50, width: 600 }}>
+                    <List
+                        size="small"
                         bordered
-                        scroll={{ x: width < 1000 ? width : 1000 }}
-                        size='small'
-                        style={{ width: width + 5, maxWidth: 1000, display: 'inline-block' }}
-                        pagination={false}
+                        dataSource={data}
+                        renderItem={item => <List.Item>{item}</List.Item>}
                     />
                 </div>
             </div>

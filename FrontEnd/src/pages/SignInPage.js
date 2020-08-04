@@ -47,7 +47,7 @@ class SignInPage extends React.Component {
         console.log(values);
         let { username, password, remember } = values;
 
-        var result = await fetchTool('/login', { username, password });
+        var result = await fetchTool('POST', '/login', { username, password });
         console.log(result)
 
         if (result.status !== 500 && result.success === true) {
