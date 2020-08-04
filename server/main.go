@@ -34,6 +34,10 @@ func main() {
 	{
 		tbPRBnew.GET("/PRBInfo_by_enodeb_name", api.QueryPRBInfoByEnodeName)
 	}
+	tbC2Inew := r.Group("/tbC2Inew")
+	{
+		tbC2Inew.GET("/Init_tbC2Inew", api.Init_tbC2Inew)
+	}
 	if err := r.Run(fmt.Sprintf(":%d", setting.HttpPort)); err != nil {
 		log.Fatal(err.Error())
 	}
