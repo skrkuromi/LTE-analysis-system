@@ -16,7 +16,12 @@ type tbC2Inew struct {
 }
 type tripleSector struct {
 	SCELl string
+	SCELL2 string
 	NCELL string
+}
+
+type cellList struct {
+	SCELL string `db:"SCELL"`
 }
 
 func GetC2I_MeanStd()(info []tbC2Inew){
@@ -71,14 +76,48 @@ func CalPrb(info []tbC2Inew){
 	return
 }
 
-func GetTriplePerfect()(info []tbC2Inew){
+func GetTriplePerfect()(res []tripleSector){
+
+	var info []tbC2Inew
 	sqlString := "select * from tbC2Inew where PrbABS6 > 0.7"
+
 	if err := db.Select(&info, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return
 	}
 
+	var CELLlist []cellList
+	sqlString = "select distinct SCELL from tbC2Inew"
+	if err := db.Select(&CELLlist, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+
+	for i:=0; i < len(CELLlist); i++{
+		S1 := CELLlist[i].SCELL
+		for j:=0; j < len(info); j++{
+			if info[j].SCELL == S1{
+				for k:=0; k < len(CELLlist); k++{
+					if CELLlist[k].SCELL == info[j].NCELL{
+						S2 := CELLlist[k].SCELL
+
+						for m:=0; m < len(info); m++{
+							if info[m].SCELL == S2{
+								N:= info[m].NCELL
+								for p:=0; p < len(info); p++{
+									if (info[p].SCELL == S1) && (info[p].NCELL == N) {
+										res = append(res, tripleSector{SCELl: S1,SCELL2: S2,NCELL: N})
+									}
+								}
+							}
+						}
+
+					}
+				}
+			}
+		}
+		CELLlist[i].SCELL = "-1"
+	}
 
 	return
 }
-
