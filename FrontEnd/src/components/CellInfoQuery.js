@@ -33,28 +33,33 @@ class CellInfoQuery extends React.Component {
             return
         }
 
+        const data = [];
+        let sector = [];
         if (type === "SECTOR_ID") {
             const result = await fetchTool('GET', '/tbcell/query_by_sector_id', { sector_id: value });
             if (result.status === undefined) {
-                const data = [];
-                const sector = result.msg[0];
-                console.log(result)
-                for (let value in sector) {
-                    data.push(value + "：" + sector[value]);
-                }
-                this.setState({ data });
+                sector = result.msg[0];
             }
         } else if (type === "SECTOR_NAME") {
             const result = await fetchTool('GET', '/tbcell/query_by_sector_name', { sector_name: value });
             if (result.status === undefined) {
-                const data = [];
-                const sector = result.msg[0];
-                for (let value in sector) {
-                    data.push(value + "：" + sector[value]);
-                }
-                this.setState({ data });
+                sector = result.msg[0];
             }
         }
+
+        for (let value in sector) {
+            let str = ""
+            if (sector[value].Valid === undefined) {
+                str = sector[value];
+            } else if (sector[value].Valid === false) {
+                str = "NULL";
+            } else {
+                str = sector[value].Float64;
+            }
+
+            data.push(value + "：" + str);
+        }
+        this.setState({ data });
     }
 
     dropdownChange = async () => {
@@ -113,6 +118,7 @@ class CellInfoQuery extends React.Component {
                         size="small"
                         bordered
                         dataSource={data}
+                        style={{ maxHeight: '500px', overflow: 'scroll' }}
                         renderItem={item => <List.Item>{item}</List.Item>}
                     />
                 </div>

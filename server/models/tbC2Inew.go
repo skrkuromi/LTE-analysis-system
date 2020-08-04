@@ -41,7 +41,7 @@ func CalPrb(info []tbC2Inew){
 				per9 = 0.0
 			}
 		}else{
-			for j:=-30.0; j < 9.0; j= j+0.01{
+			for j:=-30.0; j < 9.0; j = j+0.01 {
 				per9 = per9 + 0.1*(1/(math.Sqrt(6.28)*std)*math.Exp(-(math.Pow(j-mean, 2))/(2*math.Pow(std, 2))))
 			}
 		}
