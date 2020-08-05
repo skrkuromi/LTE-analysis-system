@@ -10,9 +10,12 @@ const { RangePicker } = DatePicker;
 
 class KPIInfoQuery extends React.Component {
     state = {
-        selectENodeB: undefined,
-        eNodeBName: [],
+        selectSector: undefined,
+        selectSectorAttr: undefined,
+        sectorName: [],
+        sectorAttr: [],
         data: [],
+        date: [],
     }
 
     disabledDate = (current) => {
@@ -21,20 +24,47 @@ class KPIInfoQuery extends React.Component {
 
     onChange = (value) => {
         this.setState({
-            selectENodeB: value
+            selectSector: value
+        })
+    }
+
+    onAttrChange = (value) => {
+        this.setState({
+            selectSectorAttr: value
+        })
+    }
+
+    dataChange = (date, string) => {
+        this.setState({
+            date: string
         })
     }
 
     handleClickQuery = async () => {
-        const { selectENodeB } = this.state;
+        const { selectSector, selectSectorAttr, date } = this.state;
+        console.log(selectSector, selectSectorAttr, date)
 
-        if (selectENodeB === undefined) {
-            alert("请选择eNodeB的Name!");
+        if (selectSector === undefined) {
+            alert("请选择小区的名称!");
+            return
+        } else if (selectSectorAttr === undefined) {
+            alert("请选择网元属性!");
+            return
+        } else if (date[0] === undefined || date[1] === undefined) {
+            alert("请选择起始时间!");
             return
         }
 
         let sector = [];
-        const result = await fetchTool('GET', '/tbKPI/query_by_enodeb_name', { enodeb_name: selectENodeB });
+        const result = await fetchTool('GET', '/tbKPI/query_by_Sector_name', {
+            SectorName: selectSector,
+            Attribute: selectSectorAttr,
+            StartTime: date[0],
+            EndTime: date[1]
+        });
+
+        console.log(result);
+
         if (result.status === undefined) {
             sector = result.msg;
         }
@@ -55,21 +85,35 @@ class KPIInfoQuery extends React.Component {
     }
 
     dropdownChange = async () => {
-        const { eNodeBName } = this.state;
+        const { sectorName } = this.state;
 
-        if (eNodeBName.length === 0) {
-            const result = await fetchTool('GET', '/tbKPI/allKPIInfo', {});
+        if (sectorName.length === 0) {
+            const result = await fetchTool('GET', '/tbKPI/QueryAllKPISector', {});
             if (result.status === undefined) {
                 this.setState({
-                    eNodeBName: result.msg
+                    sectorName: result.msg
+                })
+            }
+        }
+    }
+
+    dropdownAttrChange = async () => {
+        const { sectorAttr } = this.state;
+
+        if (sectorAttr.length === 0) {
+            const result = await fetchTool('GET', '/tbKPI/QueryAllKPIAtt', {});
+            if (result.status === undefined) {
+                this.setState({
+                    sectorAttr: result.msg
                 })
             }
         }
     }
 
     render() {
-        const { eNodeBName, data } = this.state;
-        const options = eNodeBName.map(data => <Option key={data}>{data}</Option>);
+        const { sectorName, data, sectorAttr } = this.state;
+        const sectorOptions = sectorName.map(data => <Option key={data}>{data}</Option>);
+        const attrOptions = sectorAttr.map(data => <Option key={data}>{data}</Option>);
 
         const columns = [];
         let column = data[0] || [];
@@ -89,8 +133,8 @@ class KPIInfoQuery extends React.Component {
                     <Space>
                         <Select
                             showSearch
-                            style={{ width: 300, marginRight: 20 }}
-                            placeholder="网元名称"
+                            style={{ width: 300, marginRight: 10 }}
+                            placeholder="小区名称"
                             optionFilterProp="children"
                             onChange={this.onChange}
                             filterOption={(input, option) =>
@@ -98,10 +142,25 @@ class KPIInfoQuery extends React.Component {
                             }
                             onDropdownVisibleChange={this.dropdownChange}
                         >
-                            {options}
+                            {sectorOptions}
+                        </Select>
+                        <Select
+                            showSearch
+                            style={{ width: 150, marginRight: 10 }}
+                            placeholder="网元属性"
+                            optionFilterProp="children"
+                            onChange={this.onAttrChange}
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onDropdownVisibleChange={this.dropdownAttrChange}
+                        >
+                            {attrOptions}
                         </Select>
                         <RangePicker
                             disabledDate={this.disabledDate}
+                            onChange={this.dataChange}
+                            style={{ marginRight: 10 }}
                             defaultPickerValue={[moment('2016-07', 'YYYY-MM'), moment('2016-07', 'YYYY-MM')]}
                         />
                         <Button onClick={this.handleClickQuery}>查询</Button>

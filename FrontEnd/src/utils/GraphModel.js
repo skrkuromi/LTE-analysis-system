@@ -5,7 +5,7 @@ let click = true;
 class GraphModel extends React.Component {
     createGraph = () => {
         console.log(this.props.click)
-        if (this.props.click != click) {
+        if (this.props.click !== click) {
             console.log(click)
             click = this.props.click;
             // 基于准备好的dom，初始化echarts实例
