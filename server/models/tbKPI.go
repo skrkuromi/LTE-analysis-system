@@ -58,7 +58,7 @@ func GetAllKPIInfo()(ids []string){
 	return
 }
 
-func GetKPIAttByEnodebName(enodebName string)(info []tbKPI){
+func GetKPIAttBySectorName(enodebName string)(info []tbKPI){
 	sqlString := "select * from tbKPI where 网元名称 = ?"
 	if err := db.Select(&info, sqlString, enodebName); err != nil {
 		log.Fatal(err.Error())

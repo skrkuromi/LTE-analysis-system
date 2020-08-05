@@ -10,9 +10,11 @@ func QueryAllKPIInfo(c *gin.Context) {
 	c.JSON(200, gin.H{"msg": info})
 }
 
-func QueryKPIAttByEnodebName(c *gin.Context){
-	en := c.Query("enodeb_name")
-	info := models.GetKPIAttByEnodebName(en)
+func QueryKPIAttBySectorName(c *gin.Context){
+	SectorName := c.Query("SectorName")
+	Att := c.Query("Attribute")
+
+	info := models.GetKPIAttBySectorName(SectorName, Att)
 	c.JSON(200, gin.H{"msg": info})
 }
 
