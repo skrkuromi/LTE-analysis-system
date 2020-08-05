@@ -28,7 +28,7 @@ func main() {
     tbKPI := r.Group("/tbKPI")
 	{
 		tbKPI.GET("/allKPIInfo", api.QueryAllKPIInfo)
-		tbKPI.GET("/QueryAllKPIEnodeb", api.QueryAllEnodebId)
+		tbKPI.GET("/QueryAllKPIEnodeb", api.QueryAllKPIEnodeb)
 		tbKPI.GET("/QueryAllKPIAtt", api.QueryAllKPIAtt)
 		tbKPI.GET("/KPIAtt_by_enodeb_id", api.QueryKPIAttByEnodebName)
 	}

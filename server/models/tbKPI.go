@@ -77,7 +77,7 @@ func GetAllKPIEnodeb()(enodebs []string){
 }
 
 func GetAllKPIAtt()(Att []string){
-	sqlString := "select distinct `网元名称` from tbKPI"
+	sqlString := "select column_name from `information_schema`.columns where table_name='tbKPI'"
 	if err := db.Select(&Att, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return
