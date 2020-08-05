@@ -30,6 +30,10 @@ func main() {
 		tbKPI.GET("/allKPIInfo", api.QueryAllKPIInfo)
 		tbKPI.GET("/KPIAtt_by_enodeb_id", api.QueryKPIAttByEnodebName)
 	}
+	tbPRB := r.Group("/tbPRB")
+	{
+		tbPRB.GET("/Init_tbPRBnew", api.Init_tbPRB_new)
+	}
 	tbPRBnew := r.Group("/tbPRBnew")
 	{
 		tbPRBnew.GET("/PRBInfo_by_enodeb_name", api.QueryPRBInfoByEnodeName)
