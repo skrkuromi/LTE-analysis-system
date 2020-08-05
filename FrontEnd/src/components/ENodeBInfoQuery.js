@@ -1,6 +1,7 @@
 import React from 'react';
-import { Select, Button, Table } from 'antd';
+import { Select, Button } from 'antd';
 import { fetchTool } from '../utils/fetch';
+import MyTable from '../utils/MyTable';
 
 const { Option } = Select;
 
@@ -56,7 +57,7 @@ class ENodeBInfoQuery extends React.Component {
                     currentSector[value] = currentSector[value].Float64;
                 }
             }
-            currentSector['key'] = i;
+            currentSector['key'] = i.toString();
         }
 
         this.setState({ data: sector });
@@ -89,10 +90,10 @@ class ENodeBInfoQuery extends React.Component {
             : eNodeBName.map(data => <Option key={data}>{data}</Option>);
 
         const columns = [];
-        let width = 1000;
         let column = data[0] || [];
 
         for (let value in column) {
+            if (value === "key") continue;
             columns.push({
                 title: value,
                 dataIndex: value,
@@ -127,15 +128,7 @@ class ENodeBInfoQuery extends React.Component {
                     <Button onClick={this.handleClickQuery}>查询</Button>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <Table
-                        columns={columns}
-                        dataSource={data}
-                        bordered
-                        scroll={{ x: width < 1000 ? width : 1000 }}
-                        size='small'
-                        style={{ width: width + 5, maxWidth: 1000, display: 'inline-block' }}
-                        pagination={false}
-                    />
+                    <MyTable columns={columns} data={data}></MyTable>
                 </div>
             </div>
         );

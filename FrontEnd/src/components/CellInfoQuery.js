@@ -118,7 +118,7 @@ class CellInfoQuery extends React.Component {
                         size="small"
                         bordered
                         dataSource={data}
-                        style={{ maxHeight: '500px', overflow: 'scroll' }}
+                        style={{ maxHeight: '500px', overflowY: 'scroll' }}
                         renderItem={item => <List.Item>{item}</List.Item>}
                     />
                 </div>

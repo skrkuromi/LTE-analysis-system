@@ -1,116 +1,114 @@
 import React from 'react';
-import { Select, Button } from 'antd';
+import { Select, Button, DatePicker, Space } from 'antd';
+import moment from 'moment';
 import GraphModel from '../utils/GraphModel';
+import { fetchTool } from '../utils/fetch';
+import MyTable from '../utils/MyTable';
 
 const { Option } = Select;
-let timeout;
-let currentValue;
+const { RangePicker } = DatePicker;
+
 class KPIInfoQuery extends React.Component {
     state = {
-        type: 'SECTOR_ID',
-        cell: null,
+        selectENodeB: undefined,
+        eNodeBName: [],
         data: [],
-        value: undefined,
-        click: false
     }
 
-    handleChange = (value) => {
-        this.setState({
-            type: value
-        })
+    disabledDate = (current) => {
+        return current < moment(new Date('2016/07/16')) || current > moment(new Date('2016/07/19'));
     }
 
     onChange = (value) => {
-        console.log(`selected ${value}`);
-    }
-
-    handleClickQuery = () => {
         this.setState({
-            click: this.state.click === false ? true : false
+            selectENodeB: value
         })
     }
 
-    fetch = (value, callback) => {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
+    handleClickQuery = async () => {
+        const { selectENodeB } = this.state;
+
+        if (selectENodeB === undefined) {
+            alert("请选择eNodeB的Name!");
+            return
         }
-        currentValue = value;
 
-        const data = [];
-        data.push({
-            value: '9',
-            text: '9999',
-        });
-        data.push({
-            value: '00',
-            text: '0000',
-        });
-        this.setState({
-            data
-        })
+        let sector = [];
+        const result = await fetchTool('GET', '/tbKPI/query_by_enodeb_name', { enodeb_name: selectENodeB });
+        if (result.status === undefined) {
+            sector = result.msg;
+        }
 
-        timeout = setTimeout(this.fetch, 300);
+        for (let i = 0; i < sector.length; i++) {
+            let currentSector = sector[i];
+            for (let value in currentSector) {
+                if (currentSector[value].Valid === false) {
+                    currentSector[value] = "NULL";
+                } else if (currentSector[value].Valid === true) {
+                    currentSector[value] = currentSector[value].Float64;
+                }
+            }
+            currentSector['key'] = i;
+        }
+
+        this.setState({ data: sector });
     }
 
-    dropdownChange = () => {
-        console.log('---')
-        this.fetch('q', data => this.setState({ data }));
+    dropdownChange = async () => {
+        const { eNodeBName } = this.state;
+
+        if (eNodeBName.length === 0) {
+            const result = await fetchTool('GET', '/tbKPI/allKPIInfo', {});
+            if (result.status === undefined) {
+                this.setState({
+                    eNodeBName: result.msg
+                })
+            }
+        }
     }
 
     render() {
-        const dataSource = [
-            {
-                name: '胡彦斌',
-                age: 32,
-                address: '西湖区湖底公园1号',
-            },
-            {
-                name: '胡彦祖',
-                age: 42,
-                address: '西湖区湖底公园1号',
-            },
-        ];
-        const columns = [
-            {
-                title: '姓名',
-                dataIndex: 'name',
-                key: 'name',
-            },
-            {
-                title: '年龄',
-                dataIndex: 'age',
-                key: 'age',
-            },
-            {
-                title: '住址',
-                dataIndex: 'address',
-                key: 'address',
-            },
-        ];
+        const { eNodeBName, data } = this.state;
+        const options = eNodeBName.map(data => <Option key={data}>{data}</Option>);
 
-        const options = this.state.data.map(d => <Option key={d.value}>{d.text}</Option>);
+        const columns = [];
+        let column = data[0] || [];
+
+        for (let value in column) {
+            if (value === "key") continue;
+            columns.push({
+                title: value,
+                dataIndex: value,
+                key: value
+            })
+        }
+
         return (
-            <div>
+            <div style={{ overflowY: "scroll", maxHeight: 600 }}>
                 <div>
-                    <Select defaultValue="SECTOR_ID" style={{ width: 120, marginRight: 20 }} onChange={this.handleChange}>
-                        <Option value="SECTOR_ID">小区ID</Option>
-                        <Option value="SECTOR_NAME">小区名称</Option>
-                    </Select>
-                    <Select
-                        showSearch
-                        style={{ width: 300, marginRight: 20 }}
-                        placeholder="Select SECTOR_ID or SECTOR_NAME"
-                        optionFilterProp="children"
-                        onChange={this.onChange}
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                        onDropdownVisibleChange={this.dropdownChange}
-                    >
-                        {options}
-                    </Select>
-                    <Button onClick={this.handleClickQuery}>查询</Button>
+                    <Space>
+                        <Select
+                            showSearch
+                            style={{ width: 300, marginRight: 20 }}
+                            placeholder="网元名称"
+                            optionFilterProp="children"
+                            onChange={this.onChange}
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onDropdownVisibleChange={this.dropdownChange}
+                        >
+                            {options}
+                        </Select>
+                        <RangePicker
+                            disabledDate={this.disabledDate}
+                            defaultPickerValue={[moment('2016-07', 'YYYY-MM'), moment('2016-07', 'YYYY-MM')]}
+                        />
+                        <Button onClick={this.handleClickQuery}>查询</Button>
+                    </Space>
+                </div>
+                <div style={{ paddingTop: 50 }}>
+                    <MyTable columns={columns} data={data}></MyTable>
                 </div>
                 <div style={{ paddingTop: 50 }}>
                     <GraphModel click={this.state.click}></GraphModel>

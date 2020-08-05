@@ -7,7 +7,6 @@ class PRBInfoStatistics extends React.Component {
     }
 
     render() {
-
         return (
             <div>
                 <Button onClick={this.handleClick}>生成PRBnew</Button>
