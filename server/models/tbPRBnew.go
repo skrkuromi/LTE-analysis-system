@@ -119,3 +119,30 @@ func GetPRBInfoByEnodebName(enodebName string)(info []tbPRBnew){
 	return
 }
 
+
+func GetPRBnewAttBySectorName(sectorName, StartTime, EndTime string)(info []tbKPI){
+	sqlString := "select * from tbPRBnew where 小区名 = ? and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(起始时间)  and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(起始时间)"
+	if err := db.Select(&info, sqlString, sectorName, StartTime, EndTime); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	return
+}
+
+func GetAllPRBnewSector()(sectors []string){
+	sqlString := "select distinct `小区名` from tbPRBnew"
+	if err := db.Select(&sectors, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	return
+}
+
+func GetAllPRBnewAtt()(Att []string){
+	sqlString := "select column_name from `information_schema`.columns where table_name='tbPRBnew'"
+	if err := db.Select(&Att, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	return
+}

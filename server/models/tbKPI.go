@@ -59,11 +59,7 @@ func GetAllKPIInfo()(ids []string){
 }
 
 func GetKPIAttBySectorName(sectorName, StartTime, EndTime string)(info []tbKPI){
-	sqlString := "select *" +
-		"from tbKPI" +
-		"where 小区1 = ?" +
-		"\t and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  " +
-		"\t and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
+	sqlString := "select * from tbKPI where 小区1 = ? and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
 	if err := db.Select(&info, sqlString, sectorName, StartTime, EndTime); err != nil {
 		log.Fatal(err.Error())
 		return
