@@ -58,8 +58,12 @@ func GetAllKPIInfo()(ids []string){
 	return
 }
 
-func GetKPIAttBySectorName(sectorName, Att, StartTime, EndTime string)(info []tbKPI){
-	sqlString := ""
+func GetKPIAttBySectorName(sectorName, StartTime, EndTime string)(info []tbKPI){
+	sqlString := "select *" +
+		"from tbKPI" +
+		"where 小区1 = '三门峡义马310国道煤场-HLHF-1'" +
+		"\t and UNIX_TIMESTAMP('2016-07-16') <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  " +
+		"\t and UNIX_TIMESTAMP('2016-07-19') >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
 	if err := db.Select(&info, sqlString, enodebName); err != nil {
 		log.Fatal(err.Error())
 		return
