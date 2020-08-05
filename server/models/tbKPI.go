@@ -61,19 +61,19 @@ func GetAllKPIInfo()(ids []string){
 func GetKPIAttBySectorName(sectorName, StartTime, EndTime string)(info []tbKPI){
 	sqlString := "select *" +
 		"from tbKPI" +
-		"where 小区1 = '三门峡义马310国道煤场-HLHF-1'" +
-		"\t and UNIX_TIMESTAMP('2016-07-16') <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  " +
-		"\t and UNIX_TIMESTAMP('2016-07-19') >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
-	if err := db.Select(&info, sqlString, enodebName); err != nil {
+		"where 小区1 = ?" +
+		"\t and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  " +
+		"\t and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
+	if err := db.Select(&info, sqlString, sectorName, StartTime, EndTime); err != nil {
 		log.Fatal(err.Error())
 		return
 	}
 	return
 }
 
-func GetAllKPISector()(enodebs []string){
+func GetAllKPISector()(sectors []string){
 	sqlString := "select distinct `小区1` from tbKPI"
-	if err := db.Select(&enodebs, sqlString); err != nil {
+	if err := db.Select(&sectors, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return
 	}
