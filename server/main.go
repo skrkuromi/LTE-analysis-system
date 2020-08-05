@@ -28,6 +28,8 @@ func main() {
     tbKPI := r.Group("/tbKPI")
 	{
 		tbKPI.GET("/allKPIInfo", api.QueryAllKPIInfo)
+		tbKPI.GET("/QueryAllKPIEnodeb", api.QueryAllEnodebId)
+		tbKPI.GET("/QueryAllKPIAtt", api.QueryAllKPIAtt)
 		tbKPI.GET("/KPIAtt_by_enodeb_id", api.QueryKPIAttByEnodebName)
 	}
 	tbPRB := r.Group("/tbPRB")
@@ -37,6 +39,7 @@ func main() {
 	tbPRBnew := r.Group("/tbPRBnew")
 	{
 		tbPRBnew.GET("/PRBInfo_by_enodeb_name", api.QueryPRBInfoByEnodeName)
+
 	}
 	tbC2Inew := r.Group("/tbC2Inew")
 	{

@@ -66,3 +66,21 @@ func GetKPIAttByEnodebName(enodebName string)(info []tbKPI){
 	}
 	return
 }
+
+func GetAllKPIEnodeb()(enodebs []string){
+	sqlString := "select distinct `网元名称` from tbKPI"
+	if err := db.Select(&enodebs, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	return
+}
+
+func GetAllKPIAtt()(Att []string){
+	sqlString := "select distinct `网元名称` from tbKPI"
+	if err := db.Select(&Att, sqlString); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	return
+}
