@@ -67,8 +67,8 @@ func GetKPIAttBySectorName(sectorName, Att, StartTime, EndTime string)(info []tb
 	return
 }
 
-func GetAllKPIEnodeb()(enodebs []string){
-	sqlString := "select distinct `网元名称` from tbKPI"
+func GetAllKPISector()(enodebs []string){
+	sqlString := "select distinct `小区1` from tbKPI"
 	if err := db.Select(&enodebs, sqlString); err != nil {
 		log.Fatal(err.Error())
 		return

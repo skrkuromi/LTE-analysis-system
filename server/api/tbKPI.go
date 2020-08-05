@@ -19,8 +19,8 @@ func QueryKPIAttBySectorName(c *gin.Context){
 	c.JSON(200, gin.H{"msg": info})
 }
 
-func QueryAllKPIEnodeb(c *gin.Context){
-	info := models.GetAllKPIEnodeb()
+func QueryAllKPISector(c *gin.Context){
+	info := models.GetAllKPISector()
 	c.JSON(200, gin.H{"msg": info})
 }
 
