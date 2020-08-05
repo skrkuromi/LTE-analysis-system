@@ -13,8 +13,9 @@ func QueryAllKPIInfo(c *gin.Context) {
 func QueryKPIAttBySectorName(c *gin.Context){
 	SectorName := c.Query("SectorName")
 	Att := c.Query("Attribute")
-
-	info := models.GetKPIAttBySectorName(SectorName, Att)
+	StartTime := c.Query("StartTime")
+	EndTime := c.Query("EndTime")
+	info := models.GetKPIAttBySectorName(SectorName, Att, StartTime, EndTime)
 	c.JSON(200, gin.H{"msg": info})
 }
 
