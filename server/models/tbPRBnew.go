@@ -120,7 +120,7 @@ func GetPRBInfoByEnodebName(enodebName string)(info []tbPRBnew){
 }
 
 
-func GetPRBnewAttBySectorName(sectorName, StartTime, EndTime string)(info []tbKPI){
+func GetPRBnewAttBySectorName(sectorName, StartTime, EndTime string)(info []tbPRBnew){
 	sqlString := "select * from tbPRBnew where 小区名 = ? and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(StartTime)  and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(StartTime)"
 	if err := db.Select(&info, sqlString, sectorName, StartTime, EndTime); err != nil {
 		log.Fatal(err.Error())
