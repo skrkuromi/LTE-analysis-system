@@ -103,8 +103,15 @@ class KPIInfoQuery extends React.Component {
         if (sectorAttr.length === 0) {
             const result = await fetchTool('GET', '/tbKPI/QueryAllKPIAtt', {});
             if (result.status === undefined) {
+                const sectorAttr = [];
+                for (let attrIndex in result.msg) {
+                    const value = result.msg[attrIndex];
+                    if (value === "起始时间" || value === "周期" || value === "网元名称" ||
+                        value === "小区" || value === "小区1") continue;
+                    sectorAttr.push(value);
+                }
                 this.setState({
-                    sectorAttr: result.msg
+                    sectorAttr
                 })
             }
         }
@@ -146,7 +153,7 @@ class KPIInfoQuery extends React.Component {
                         </Select>
                         <Select
                             showSearch
-                            style={{ width: 150, marginRight: 10 }}
+                            style={{ width: 300, marginRight: 10 }}
                             placeholder="网元属性"
                             optionFilterProp="children"
                             onChange={this.onAttrChange}

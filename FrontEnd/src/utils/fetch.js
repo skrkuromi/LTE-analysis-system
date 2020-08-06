@@ -28,6 +28,8 @@ export async function fetchTool(type, route, form) {
         }
     }
 
+    console.log(route)
+
     const res = await fetch(url + route, init);
 
     if (res.status === 200) {
