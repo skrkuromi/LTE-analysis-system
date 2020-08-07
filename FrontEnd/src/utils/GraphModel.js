@@ -1,44 +1,49 @@
 import React from 'react';
 
 var echarts = require('echarts');
-let click = true;
 class GraphModel extends React.Component {
     createGraph = () => {
-        console.log(this.props.click)
-        if (this.props.click !== click) {
-            console.log(click)
-            click = this.props.click;
-            // 基于准备好的dom，初始化echarts实例
+        const { data, attrName } = this.props;
+        if (data.length !== 0) {
+
             var myChart = echarts.init(document.getElementById('main'));
+            const xData = [], yData = [];
 
-            // 指定图表的配置项和数据
-            if(click){
-                var option = {
-                    title: {
-                        text: 'ECharFts 入门示例'
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['销量']
-                    },
-                    xAxis: {
-                        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-                    },
-                    yAxis: {},
-                    series: [{
-                        name: '销量',
-                        type: 'bar',
-                        data: [5, 20, 36, 10, 10, 20]
-                    }]
-                };
-            } else {
-                var option = {
-
-                };
+            for (let value in data) {
+                const temp = data[value];
+                xData.push(temp['起始时间']);
+                yData.push(temp[attrName]);
             }
 
+            var option = {
+                title: {
+                    text: attrName + '-时间图'
+                },
+                tooltip: {},
+                legend: {
+                    data: [attrName],
+                    right: 150
+                },
+                xAxis: {
+                    data: xData
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        saveAsImage: { show: true }
+                    }
+                },
+                yAxis: {},
+                series: [{
+                    name: attrName,
+                    type: 'bar',
+                    data: yData,
+                    barMaxWidth: 50
+                }],
+                color: ['#1890ff']
+            };
 
-            // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
         }
     }
@@ -47,14 +52,14 @@ class GraphModel extends React.Component {
         this.createGraph();
     }
 
-    componentWillUpdate() {
+    componentDidUpdate() {
         this.createGraph();
     }
 
     render() {
         return (
             <div>
-                <div id="main" style={{ width: 600, height: 400 }}></div>
+                <div id="main" style={{ width: 800, height: 400 }}></div>
             </div>
         );
     }

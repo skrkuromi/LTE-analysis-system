@@ -12,6 +12,7 @@ class KPIInfoQuery extends React.Component {
     state = {
         selectSector: undefined,
         selectSectorAttr: undefined,
+        attrName: undefined,
         sectorName: [],
         sectorAttr: [],
         data: [],
@@ -19,7 +20,7 @@ class KPIInfoQuery extends React.Component {
     }
 
     disabledDate = (current) => {
-        return current < moment(new Date('2016/07/16')) || current > moment(new Date('2016/07/19'));
+        return current < moment(new Date('2016/07/17')) || current > moment(new Date('2016/07/19'));
     }
 
     onChange = (value) => {
@@ -40,6 +41,53 @@ class KPIInfoQuery extends React.Component {
         })
     }
 
+    transformAttrName = (cValue) => {
+        switch (cValue) {
+            case "起始时间": return 'StartTime';
+            case "RRC连接建立完成次数 (无)": return 'RRC_SUC';
+            case "RRC连接请求次数（包括重发） (无)": return 'RRC_TRY';
+            case "RRC建立成功率qf (%)": return 'RRC_SUCrate';
+            case "E-RAB建立成功总次数 (无)": return 'ERAB_SUC';
+            case "E-RAB建立尝试总次数 (无)": return 'ERAB_TRY';
+            case "E-RAB建立成功率2 (%)": return 'ERAB_SUCrate';
+            case "eNodeB触发的E-RAB异常释放总次数 (无)": return 'EnodebERABrls';
+            case "小区切换出E-RAB异常释放总次数 (无)": return 'SectorERABrls';
+            case "E-RAB掉线率(新) (%)": return 'ERABdisconnectRate';
+            case "无线接通率ay (%)": return 'Ay';
+            case "eNodeB发起的S1 RESET导致的UE Context释放次数 (无)": return 'EnodebS1RESET';
+            case "UE Context异常释放次数 (无)": return 'UEContextrls';
+            case "无线接通率ay (%)": return 'Ay';
+            case "无线接通率ay (%)": return 'Ay';
+            case "无线接通率ay (%)": return 'Ay';
+            case 'UE Context建立成功总次数 (无)': return 'UEContextSUC';
+            case '无线掉线率 (%)': return 'Al';
+            case 'eNodeB内异频切换出成功次数 (无)': return 'EnodebInAsySUC';
+            case 'eNodeB内异频切换出尝试次数 (无)': return 'EnodebInAsyTRY';
+            case 'eNodeB内同频切换出成功次数 (无)': return 'EnodebInSynSUC';
+            case 'eNodeB内同频切换出尝试次数 (无)': return 'EnodebInSnyTRY';
+            case 'eNodeB间异频切换出成功次数 (无)': return 'EnodebBetAsySUC';
+            case 'eNodeB间异频切换出尝试次数 (无)': return 'EnodebBetAsyTRY';
+            case 'eNodeB间同频切换出成功次数 (无)': return 'EnodebBetSnySUC';
+            case 'eNodeB间同频切换出尝试次数 (无)': return 'EnodebBetSnyTRY';
+            case 'eNB内切换成功率 (%)': return 'EnInSUCrate';
+            case 'eNB间切换成功率 (%)': return 'EnBetSUCrate';
+            case '同频切换成功率zsp (%)': return 'InSUCrate';
+            case '异频切换成功率zsp (%)': return 'BetSUCrate';
+            case '切换成功率 (%)': return 'SUCrate';
+            case '小区PDCP层所接收到的上行数据的总吞吐量 (比特)': return 'PDCPupload';
+            case '小区PDCP层所发送的下行数据的总吞吐量 (比特)': return 'PDCPdownload';
+            case 'RRC重建请求次数 (无)': return 'RRCReconstruct';
+            case 'RRC连接重建比率 (%)': return 'RRCReconstructRate';
+            case '通过重建回源小区的eNodeB间同频切换出执行成功次数 (无)': return 'ReconstructBetSyn';
+            case '通过重建回源小区的eNodeB间异频切换出执行成功次数 (无)': return 'ReconstructBetAsy';
+            case '通过重建回源小区的eNodeB内同频切换出执行成功次数 (无)': return 'ReconstructInSyn';
+            case '通过重建回源小区的eNodeB内异频切换出执行成功次数 (无)': return 'ReconstructInAsy';
+            case 'eNB内切换出成功次数 (次)': return 'EnInSUC';
+            case 'eNB内切换出请求次数 (次)': return 'EnInTRY';
+            default: return "";
+        }
+    }
+
     handleClickQuery = async () => {
         const { selectSector, selectSectorAttr, date } = this.state;
         console.log(selectSector, selectSectorAttr, date)
@@ -55,33 +103,27 @@ class KPIInfoQuery extends React.Component {
             return
         }
 
-        let sector = [];
-        const result = await fetchTool('GET', '/tbKPI/query_by_Sector_name', {
+        let sector = [], attrName = this.transformAttrName(selectSectorAttr);
+        const result = await fetchTool('GET', '/tbKPI/Query_KPIAtt_bySector', {
             SectorName: selectSector,
             Attribute: selectSectorAttr,
             StartTime: date[0],
             EndTime: date[1]
         });
 
-        console.log(result);
-
         if (result.status === undefined) {
             sector = result.msg;
         }
 
         for (let i = 0; i < sector.length; i++) {
-            let currentSector = sector[i];
-            for (let value in currentSector) {
-                if (currentSector[value].Valid === false) {
-                    currentSector[value] = "NULL";
-                } else if (currentSector[value].Valid === true) {
-                    currentSector[value] = currentSector[value].Float64;
-                }
-            }
+            let currentSector = [];
             currentSector['key'] = i;
+            currentSector['起始时间'] = sector[i].StartTime;
+            currentSector[selectSectorAttr] = sector[i][attrName];
+            sector[i] = currentSector;
         }
 
-        this.setState({ data: sector });
+        this.setState({ data: sector, attrName: selectSectorAttr });
     }
 
     dropdownChange = async () => {
@@ -118,7 +160,7 @@ class KPIInfoQuery extends React.Component {
     }
 
     render() {
-        const { sectorName, data, sectorAttr } = this.state;
+        const { sectorName, data, sectorAttr, attrName } = this.state;
         const sectorOptions = sectorName.map(data => <Option key={data}>{data}</Option>);
         const attrOptions = sectorAttr.map(data => <Option key={data}>{data}</Option>);
 
@@ -177,7 +219,7 @@ class KPIInfoQuery extends React.Component {
                     <MyTable columns={columns} data={data}></MyTable>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <GraphModel click={this.state.click}></GraphModel>
+                    <GraphModel data={data} attrName={attrName} ></GraphModel>
                 </div>
             </div>
         );
