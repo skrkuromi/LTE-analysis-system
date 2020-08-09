@@ -87,12 +87,11 @@ func CalPrb(info []tbC2Inew){
 	return
 }
 
-func GetTriplePerfect()(res []tripleSector){
-
+func GetTriplePerfect(percent string)(res []tripleSector){
 	var info []tbC2Inew
-	sqlString := "select * from tbC2Inew where PrbABS6 > 0.7"
+	sqlString := "select * from tbC2Inew where PrbABS6 > ?"
 
-	if err := db.Select(&info, sqlString); err != nil {
+	if err := db.Select(&info, sqlString, percent); err != nil {
 		log.Fatal(err.Error())
 		return
 	}

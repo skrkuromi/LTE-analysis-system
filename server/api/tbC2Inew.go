@@ -11,7 +11,8 @@ func Init_tbC2Inew(c *gin.Context) {
 }
 
 func GetTripleSector(c *gin.Context){
-	info := models.GetTriplePerfect()
+	per := c.Query("percent")
+	info := models.GetTriplePerfect(per)
 	c.JSON(200, gin.H{"msg": info})
 }
 
