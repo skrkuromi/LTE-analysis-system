@@ -38,6 +38,7 @@ func main() {
 	}
 	tbPRBnew := r.Group("/tbPRBnew")
 	{
+		tbPRBnew.GET("/Init_PRBnew", api.Init_tbPRB_new)
 		tbPRBnew.GET("/PRBInfo_by_enodeb_name", api.QueryPRBInfoByEnodeName)
 		tbPRBnew.GET("/QueryAllPRBnewSector", api.QueryAllPRBnewSector)
 		tbPRBnew.GET("/QueryAllPRBnewAtt", api.QueryAllPRBnewAtt)
