@@ -42,7 +42,7 @@ class Download extends React.Component {
         element.download = `${label}.csv`;
         element.style.display = 'none';
         var blob = new Blob([list], {
-            type: "text/csv;charset=" + 'utf-8' + ";"
+            type: "text/csv;charset=utf-8;"
         });
         element.href = URL.createObjectURL(blob);
         document.body.appendChild(element);

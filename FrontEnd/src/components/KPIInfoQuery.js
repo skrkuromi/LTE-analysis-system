@@ -56,9 +56,6 @@ class KPIInfoQuery extends React.Component {
             case "无线接通率ay (%)": return 'Ay';
             case "eNodeB发起的S1 RESET导致的UE Context释放次数 (无)": return 'EnodebS1RESET';
             case "UE Context异常释放次数 (无)": return 'UEContextrls';
-            case "无线接通率ay (%)": return 'Ay';
-            case "无线接通率ay (%)": return 'Ay';
-            case "无线接通率ay (%)": return 'Ay';
             case 'UE Context建立成功总次数 (无)': return 'UEContextSUC';
             case '无线掉线率 (%)': return 'Al';
             case 'eNodeB内异频切换出成功次数 (无)': return 'EnodebInAsySUC';
@@ -219,7 +216,7 @@ class KPIInfoQuery extends React.Component {
                     <MyTable columns={columns} data={data}></MyTable>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <GraphModel data={data} attrName={attrName} ></GraphModel>
+                    <GraphModel data={data} attrName={attrName} parent="KPI" ></GraphModel>
                 </div>
             </div>
         );
