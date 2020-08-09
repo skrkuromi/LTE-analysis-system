@@ -35,9 +35,9 @@ func main() {
 	tbPRB := r.Group("/tbPRB")
 	{
 		tbPRB.GET("/Init_PRBnew", api.Init_tbPRB_new)
-		tbPRB.GET("/QueryAllPRBnewSector", api.QueryAllPRBSector)
-		tbPRB.GET("/QueryAllPRBnewAtt", api.QueryAllPRBAtt)
-		tbPRB.GET("/Query_PRBnew_bySector", api.QueryPRBAttBySectorName)
+		tbPRB.GET("/QueryAllPRBSector", api.QueryAllPRBSector)
+		tbPRB.GET("/QueryAllPRBAtt", api.QueryAllPRBAtt)
+		tbPRB.GET("/Query_PRB_bySector", api.QueryPRBAttBySectorName)
 	}
 	tbPRBnew := r.Group("/tbPRBnew")
 	{
