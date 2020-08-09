@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button } from 'antd';
+import { fetchTool } from '../utils/fetch';
 
 class PRBInfoStatistics extends React.Component {
-    handleClick = () => {
-
+    handleClick = async () => {
+        const res = await fetchTool('GET', '/tbPRB/Init_PRBnew', {});
     }
 
     render() {

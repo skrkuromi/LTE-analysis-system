@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button } from 'antd';
+import { fetchTool } from '../utils/fetch';
 
 class C2IInfoStatistics extends React.Component {
-    handleClick = () => {
-
+    handleClick = async () => {
+        const res = await fetchTool('GET', '/tbC2Inew/Init_tbC2Inew', {});
     }
 
     render() {

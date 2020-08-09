@@ -154,7 +154,6 @@ class PRBInfoQuery extends React.Component {
 
     handleClickQuery = async () => {
         const { selectSector, selectSectorAttr, date, timeClass } = this.state;
-        console.log(selectSector, selectSectorAttr, date)
 
         if (selectSector === undefined) {
             alert("请选择小区的名称!");
@@ -278,7 +277,7 @@ class PRBInfoQuery extends React.Component {
                         </Select>
                         <Select
                             showSearch
-                            style={{ width: 200, marginRight: 10 }}
+                            style={{ width: 150, marginRight: 10 }}
                             placeholder="网元属性"
                             optionFilterProp="children"
                             onChange={this.onAttrChange}
@@ -289,7 +288,11 @@ class PRBInfoQuery extends React.Component {
                         >
                             {attrOptions}
                         </Select>
-                        <Select value={timeClass} onChange={this.handleTimeClassChange}>
+                        <Select
+                            value={timeClass}
+                            onChange={this.handleTimeClassChange}
+                            style={{ marginRight: 10 }}
+                        >
                             <Option value="hour">小时级</Option>
                             <Option value="minute">分钟级</Option>
                         </Select>

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Table } from 'antd';
+import { Button } from 'antd';
+import MyTable from '../utils/MyTable';
+import { fetchTool } from '../utils/fetch';
 
 class C2IInfoAnalysis extends React.Component {
     state = {
@@ -7,11 +9,13 @@ class C2IInfoAnalysis extends React.Component {
         value: undefined,
     }
 
-    handleClickQuery = () => {
-
+    handleClickQuery = async () => {
+        const res = await fetchTool('GET', '/tbC2Inew/query_tripleSector', {});
+        console.log(res);
     }
 
     render() {
+        const { data } = this.props;
         const dataSource = [
             {
                 key: 1,
@@ -43,22 +47,13 @@ class C2IInfoAnalysis extends React.Component {
                 key: 'address',
             },
         ];
-        let width = 1000;
         return (
             <div>
                 <div>
                     <Button onClick={this.handleClickQuery}>查询重叠覆盖三元组</Button>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <Table
-                        columns={columns}
-                        dataSource={dataSource}
-                        bordered
-                        scroll={{ x: width < 1100 ? width : 1100 }}
-                        size='small'
-                        style={{ width: width + 5, maxWidth: 1100, display: 'inline-block' }}
-                        pagination={false}
-                    />
+                    <MyTable columns={columns} data={data} parent="C2I" ></MyTable>
                 </div>
             </div>
         );
