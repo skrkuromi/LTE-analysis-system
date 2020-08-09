@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Space } from 'antd';
 import MyTable from '../utils/MyTable';
 import { fetchTool } from '../utils/fetch';
 
@@ -50,7 +50,10 @@ class C2IInfoAnalysis extends React.Component {
         return (
             <div>
                 <div>
-                    <Button onClick={this.handleClickQuery}>查询重叠覆盖三元组</Button>
+                    <Space>
+
+                        <Button onClick={this.handleClickQuery}>查询重叠覆盖三元组</Button>
+                    </Space>
                 </div>
                 <div style={{ paddingTop: 50 }}>
                     <MyTable columns={columns} data={data} parent="C2I" ></MyTable>
