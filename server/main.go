@@ -49,6 +49,7 @@ func main() {
 	tbC2Inew := r.Group("/tbC2Inew")
 	{
 		tbC2Inew.GET("/Init_tbC2Inew", api.Init_tbC2Inew)
+		tbC2Inew.GET("/Query_Process", api.QueryProcess)
 		tbC2Inew.GET("/query_tripleSector", api.GetTripleSector)
 	}
 	if err := r.Run(fmt.Sprintf(":%d", setting.HttpPort)); err != nil {

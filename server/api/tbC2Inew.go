@@ -16,6 +16,6 @@ func GetTripleSector(c *gin.Context){
 }
 
 func QueryProcess(c *gin.Context){
-	info := models.GetAllPRBnewAtt()
+	info := models.GetProcess()
 	c.JSON(200, gin.H{"msg": info})
 }
