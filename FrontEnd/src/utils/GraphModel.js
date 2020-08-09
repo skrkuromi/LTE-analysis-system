@@ -20,10 +20,6 @@ class GraphModel extends React.Component {
                     text: attrName + '-时间图'
                 },
                 tooltip: {},
-                legend: {
-                    data: [attrName],
-                    right: 150
-                },
                 xAxis: {
                     data: xData
                 },
@@ -57,11 +53,21 @@ class GraphModel extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <div id="main" style={{ width: 800, height: 400 }}></div>
-            </div>
-        );
+        const { parent } = this.props;
+        if (parent === "PRB") {
+            return (
+                <div>
+                    <div id="main" style={{ width: 1000, height: 400 }}></div>
+                </div>
+            );
+        } else if (parent === "KPI") {
+            return (
+                <div>
+                    <div id="main" style={{ width: 800, height: 400 }}></div>
+                </div>
+            );
+        }
+
     }
 }
 

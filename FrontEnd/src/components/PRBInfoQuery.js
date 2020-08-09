@@ -13,10 +13,11 @@ class PRBInfoQuery extends React.Component {
         selectSector: undefined,
         selectSectorAttr: undefined,
         attrName: undefined,
+        timeClass: 'hour',
         sectorName: [],
         sectorAttr: [],
         data: [],
-        date: [],
+        date: ['2016-07-17 00', '2016-07-19 23'],
     }
 
     disabledDate = (current) => {
@@ -152,7 +153,7 @@ class PRBInfoQuery extends React.Component {
     }
 
     handleClickQuery = async () => {
-        const { selectSector, selectSectorAttr, date } = this.state;
+        const { selectSector, selectSectorAttr, date, timeClass } = this.state;
         console.log(selectSector, selectSectorAttr, date)
 
         if (selectSector === undefined) {
@@ -167,7 +168,12 @@ class PRBInfoQuery extends React.Component {
         }
 
         let sector = [], attrName = this.transformAttrName(selectSectorAttr);
-        const result = await fetchTool('GET', '/tbPRBnew/Query_PRBnew_bySector', {
+
+        let url = "";
+        if (timeClass === "hour") url = '/tbPRBnew/Query_PRBnew_bySector';
+        else if (timeClass === "minute") url = '/tbPRB/Query_PRB_bySector';
+
+        const result = await fetchTool('GET', url, {
             SectorName: selectSector,
             Attribute: selectSectorAttr,
             StartTime: date[0],
@@ -189,11 +195,25 @@ class PRBInfoQuery extends React.Component {
         this.setState({ data: sector, attrName: selectSectorAttr });
     }
 
+    handleTimeClassChange = (value) => {
+        if (value === 'hour') {
+            this.setState({
+                timeClass: value,
+                date: ['2016-07-17 00', '2016-07-19 23']
+            })
+        } else {
+            this.setState({
+                timeClass: value,
+                date: ['2016-07-17 00:00', '2016-07-19 23:45']
+            })
+        }
+    }
+
     dropdownChange = async () => {
         const { sectorName } = this.state;
 
         if (sectorName.length === 0) {
-            const result = await fetchTool('GET', '/tbPRBnew/QueryAllPRBnewSector', {});
+            const result = await fetchTool('GET', '/tbPRB/QueryAllPRBSector', {});
             if (result.status === undefined) {
                 this.setState({
                     sectorName: result.msg
@@ -206,12 +226,12 @@ class PRBInfoQuery extends React.Component {
         const { sectorAttr } = this.state;
 
         if (sectorAttr.length === 0) {
-            const result = await fetchTool('GET', '/tbPRBnew/QueryAllPRBnewAtt', {});
+            const result = await fetchTool('GET', '/tbPRB/QueryAllPRBAtt', {});
             if (result.status === undefined) {
                 const sectorAttr = [];
                 for (let attrIndex in result.msg) {
                     const value = result.msg[attrIndex];
-                    if (value === "StartTime" || value === "周期" || value === "网元名称" ||
+                    if (value === "起始时间" || value === "周期" || value === "网元名称" ||
                         value === "小区" || value === "小区名") continue;
                     sectorAttr.push(value);
                 }
@@ -223,7 +243,7 @@ class PRBInfoQuery extends React.Component {
     }
 
     render() {
-        const { sectorName, data, sectorAttr, attrName } = this.state;
+        const { sectorName, data, sectorAttr, attrName, timeClass } = this.state;
         const sectorOptions = sectorName.map(data => <Option key={data}>{data}</Option>);
         const attrOptions = sectorAttr.map(data => <Option key={data}>{data}</Option>);
 
@@ -245,7 +265,7 @@ class PRBInfoQuery extends React.Component {
                     <Space>
                         <Select
                             showSearch
-                            style={{ width: 300, marginRight: 10 }}
+                            style={{ width: 270, marginRight: 10 }}
                             placeholder="小区名称"
                             optionFilterProp="children"
                             onChange={this.onChange}
@@ -258,7 +278,7 @@ class PRBInfoQuery extends React.Component {
                         </Select>
                         <Select
                             showSearch
-                            style={{ width: 300, marginRight: 10 }}
+                            style={{ width: 200, marginRight: 10 }}
                             placeholder="网元属性"
                             optionFilterProp="children"
                             onChange={this.onAttrChange}
@@ -269,27 +289,31 @@ class PRBInfoQuery extends React.Component {
                         >
                             {attrOptions}
                         </Select>
-                        <RangePicker
-                            showTime={{ format: 'HH' }}
-                            format="YYYY-MM-DD HH"
-                            disabledDate={this.disabledDate}
-                            onChange={this.dataChange}
-                            style={{ marginRight: 10 }}
-                            showTime
-                            defaultValue={[moment('2016-07-16 00', 'YYYY-MM-DD HH'), moment('2016-07-19 23', 'YYYY-MM-DD HH')]}
-                            defaultPickerValue={[moment('2016-07-16 00', 'YYYY-MM-DD HH'), moment('2016-07-19 23', 'YYYY-MM-DD HH')]}
-                        />
-                        <RangePicker
-                            showTime={{ format: 'HH:mm' }}
-                            format="YYYY-MM-DD HH:mm"
-                            disabledDate={this.disabledDateMinute}
-                            onChange={this.dataChange}
-                            style={{ marginRight: 10 }}
-                            showTime
-                            minuteStep={15}
-                            defaultValue={[moment('2016-07-16 00:00', 'YYYY-MM-DD HH:mm'), moment('2016-07-19 23:45', 'YYYY-MM-DD HH:mm')]}
-                            defaultPickerValue={[moment('2016-07-16 00:00', 'YYYY-MM-DD HH:mm'), moment('2016-07-19 23:45', 'YYYY-MM-DD HH:mm')]}
-                        />
+                        <Select value={timeClass} onChange={this.handleTimeClassChange}>
+                            <Option value="hour">小时级</Option>
+                            <Option value="minute">分钟级</Option>
+                        </Select>
+                        {
+                            timeClass === 'hour' ? <RangePicker
+                                showTime={{ format: 'HH' }}
+                                format="YYYY-MM-DD HH"
+                                disabledDate={this.disabledDate}
+                                onChange={this.dataChange}
+                                style={{ marginRight: 10 }}
+                                defaultValue={[moment('2016-07-17 00', 'YYYY-MM-DD HH'), moment('2016-07-19 23', 'YYYY-MM-DD HH')]}
+                                defaultPickerValue={[moment('2016-07-17 00', 'YYYY-MM-DD HH'), moment('2016-07-19 23', 'YYYY-MM-DD HH')]}
+                            /> :
+                                <RangePicker
+                                    showTime={{ format: 'HH:mm' }}
+                                    format="YYYY-MM-DD HH:mm"
+                                    disabledDate={this.disabledDateMinute}
+                                    onChange={this.dataChange}
+                                    style={{ marginRight: 10 }}
+                                    minuteStep={15}
+                                    defaultValue={[moment('2016-07-17 00:00', 'YYYY-MM-DD HH:mm'), moment('2016-07-19 23:45', 'YYYY-MM-DD HH:mm')]}
+                                    defaultPickerValue={[moment('2016-07-17 00:00', 'YYYY-MM-DD HH:mm'), moment('2016-07-19 23:45', 'YYYY-MM-DD HH:mm')]}
+                                />
+                        }
                         <Button onClick={this.handleClickQuery}>查询</Button>
                     </Space>
                 </div>
@@ -297,7 +321,7 @@ class PRBInfoQuery extends React.Component {
                     <MyTable columns={columns} data={data}></MyTable>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <GraphModel data={data} attrName={attrName} ></GraphModel>
+                    <GraphModel data={data} attrName={attrName} parent="PRB"></GraphModel>
                 </div>
             </div>
         );

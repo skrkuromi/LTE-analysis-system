@@ -41,6 +41,7 @@ class ComponentsPage extends React.Component {
             case '7': return <PRBInfoQuery></PRBInfoQuery>;
             case '8': return <C2IInfoStatistics></C2IInfoStatistics>;
             case '9': return <C2IInfoAnalysis></C2IInfoAnalysis>;
+            default: return <div></div>
         }
     }
 
@@ -50,7 +51,7 @@ class ComponentsPage extends React.Component {
         let Days = 3;
         let exp = new Date();
         exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
-        document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString();
+        document.cookie = `accountInfo=${escape(accountInfo)};expires=${exp.toGMTString()}`;
 
         loginInit();
     }

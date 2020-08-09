@@ -11,7 +11,7 @@ class MyTable extends Component {
                 columns={columns}
                 dataSource={data}
                 bordered
-                scroll={{ x: width < 1000 ? width : 1000 }}
+                scroll={{ x: width < 1000 ? width : 1000, y: 300 }}
                 size='small'
                 style={{ width: width + 5, maxWidth: 1005, display: 'inline-block' }}
                 pagination={false}

@@ -12,7 +12,7 @@ class SignInPage extends React.Component {
     }
 
     loadAccountInfo = () => {
-        let arr, reg = new RegExp("(^| )" + 'accountInfo' + "=([^;]*)(;|$)");
+        let arr, reg = new RegExp("(^| )accountInfo=([^;]*)(;|$)");
         let accountInfo = '';
         arr = document.cookie.match(reg)
         if (arr) {
@@ -28,7 +28,7 @@ class SignInPage extends React.Component {
             let password = "";
             let login = "";
 
-            let i = new Array()
+            let i = [];
             i = accountInfo.split("&");
             username = i[0];
             password = i[1];
@@ -39,16 +39,14 @@ class SignInPage extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.loadAccountInfo();
     }
 
     handleSubmit = async (values) => {
-        console.log(values);
         let { username, password, remember } = values;
 
         var result = await fetchTool('POST', '/login', { username, password });
-        console.log(result)
 
         if (result.status !== 500 && result.success === true) {
             if (remember) {
@@ -56,7 +54,7 @@ class SignInPage extends React.Component {
                 let Days = 3;
                 let exp = new Date();
                 exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
-                document.cookie = 'accountInfo' + "=" + escape(accountInfo) + ";expires=" + exp.toGMTString();
+                document.cookie = `accountInfo=${escape(accountInfo)};expires=${exp.toGMTString()}`;
             }
             let values = { username, password, login: true }
             loginAction(values);

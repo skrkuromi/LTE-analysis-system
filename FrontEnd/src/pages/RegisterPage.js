@@ -7,11 +7,9 @@ import { fetchTool } from '../utils/fetch';
 class RegisterPage extends React.Component {
 
     handleSubmit = async (values) => {
-        console.log(values);
         let { username, password } = values;
 
         var result = await fetchTool('POST', '/register', { username, password });
-        console.log(result)
 
         if (result.status !== 500) {
             if (result.success === true) {
