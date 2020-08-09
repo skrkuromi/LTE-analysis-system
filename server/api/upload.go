@@ -22,4 +22,5 @@ func Upload(c *gin.Context) {
 		//}
 		fmt.Println(row)
 	}
+	//insert into user(id, username, password) values(5, 'xxx', 1234) on duplicate key update password=555
 }
