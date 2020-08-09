@@ -26,7 +26,7 @@ class GraphModel extends React.Component {
                 toolbox: {
                     show: true,
                     feature: {
-                        magicType: { show: true, type: ['line', 'bar'] },
+                        magicType: { show: true, type: ['bar', 'line'] },
                         saveAsImage: { show: true }
                     }
                 },

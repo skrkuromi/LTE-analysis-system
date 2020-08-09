@@ -6,7 +6,7 @@ import ENodeBInfoQuery from './ENodeBInfoQuery';
 import KPIInfoQuery from './KPIInfoQuery';
 import PRBInfoQuery from './PRBInfoQuery';
 import PRBInfoStatistics from './PRBInfoStatistics';
-import UploadTest from './UploadTest';
+import UploadFile from './UploadFile';
 
 
 export {
@@ -18,5 +18,5 @@ export {
     KPIInfoQuery,
     PRBInfoQuery,
     PRBInfoStatistics,
-    UploadTest
+    UploadFile
 };

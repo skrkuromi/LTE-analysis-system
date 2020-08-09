@@ -46,7 +46,7 @@ const props = {
     }
 };
 
-const UploadTest = () => (
+const UploadFile = () => (
     <Upload {...props}>
         <Button>
             <UploadOutlined /> Click to Upload
@@ -54,4 +54,4 @@ const UploadTest = () => (
     </Upload>
 )
 
-export default UploadTest;
+export default UploadFile;
