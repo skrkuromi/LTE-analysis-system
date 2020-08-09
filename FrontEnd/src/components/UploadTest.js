@@ -7,7 +7,9 @@ import XLSX from 'xlsx';
 const props = {
     beforeUpload: file => {
         console.log(file);
-        var fileType = file.name.split(".")[1];
+        var fileType = file.name.split(".");
+        fileType = fileType[fileType.length - 1];
+        
         if (fileType === 'csv') {
             Papa.parse(file, {
                 // 按行处理
