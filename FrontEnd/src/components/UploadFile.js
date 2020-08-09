@@ -9,12 +9,26 @@ const props = {
         console.log(file);
         var fileType = file.name.split(".");
         fileType = fileType[fileType.length - 1];
-        
+
         if (fileType === 'csv') {
+            var count = 0, array = [], meta = [];
+
             Papa.parse(file, {
                 // 按行处理
-                step: function (row) {
-                    console.log("Row:", row.data);
+                step: function (row, parser) {
+                    if (meta.length === 0) {
+                        meta = [...row.data];
+                        console.log(meta)
+                    } else if (count < 50) {
+                        array.push([...row.data]);
+                        count++;
+                    } else {
+                        parser.pause();
+                        console.log(array);
+                        array = [];
+                        count = 0;
+                        parser.resume();
+                    }
                 },
                 complete: function () {
                     console.log("All done!");
@@ -50,7 +64,7 @@ const UploadFile = () => (
     <Upload {...props}>
         <Button>
             <UploadOutlined /> Click to Upload
-         </Button>
+        </Button>
     </Upload>
 )
 
