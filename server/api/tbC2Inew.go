@@ -6,8 +6,10 @@ import (
 )
 
 func Init_tbC2Inew(c *gin.Context) {
-	info := models.GetC2I_MeanStd()
-	c.JSON(200, gin.H{"msg": info})
+	go func() {
+		models.GetC2I_MeanStd()
+	}()
+	c.JSON(200, gin.H{"msg": "success"})
 }
 
 func GetTripleSector(c *gin.Context){

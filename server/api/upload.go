@@ -22,5 +22,4 @@ func Upload(c *gin.Context) {
 		//}
 		fmt.Println(row)
 	}
-
 }
