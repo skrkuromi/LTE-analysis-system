@@ -117,7 +117,7 @@ func Init_PRBnew() string {
 }
 
 func GetPRBAttBySectorName(sectorName, StartTime, EndTime string)(info []tbPRB){
-	sqlString := "select * from tbPRB where 小区名 =  ? and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))  and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H'))"
+	sqlString := "select * from tbPRB where 小区名 =  ? and UNIX_TIMESTAMP(?) <= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H:%i'))  and UNIX_TIMESTAMP(?) >= UNIX_TIMESTAMP(STR_TO_DATE(起始时间, '%m/%d/%Y %H:%i'))"
 
 	if err := db.Select(&info, sqlString, sectorName, StartTime, EndTime); err != nil {
 		log.Fatal(err.Error())
