@@ -24,6 +24,8 @@ type cellList struct {
 	SCELL string `db:"SCELL"`
 }
 
+var pro = 0
+
 func GetC2I_MeanStd()(info []tbC2Inew){
 	sqlString := "select ServingSector as SCELL, InterferingSector as NCELL," +
 		"avg(LteScRSRP-LteNcRSRP) as C2I_Mean, STD(LteScRSRP-LteNcRSRP) as STD, " +
@@ -35,11 +37,17 @@ func GetC2I_MeanStd()(info []tbC2Inew){
 	}
 
 	CalPrb(info)
+	fmt.Println(len(info))
 	sql := "insert into tbC2Inew(SCELL, NCELL, C2I_Mean, STD, Prb9, PrbABS6) values(?, ?, ?, ?, ?, ?)"
 	for i:=0; i < len(info); i++{
 		db.Exec(sql, info[i].SCELL, info[i].NCELL, info[i].C2I_Mean, info[i].STD, info[i].Prb9, info[i].PrbABS6)
-		fmt.Println(info[i])
+		temp := int((float64(i)/float64(len(info)))*100)
+		pro = temp
+		fmt.Println("--------------------")
+		fmt.Println(i)
+		fmt.Println(pro)
 	}
+	pro = 100.0
 
 	return
 }
