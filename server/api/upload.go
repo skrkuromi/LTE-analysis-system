@@ -19,11 +19,12 @@ func GetLoadProcess(c *gin.Context)  {
 
 
 func Upload(c *gin.Context) {
-	//fileName := c.Query("fileName")
-	//fileType := c.Query("fileType")
+	fileName := c.PostForm("filePath")
+	// fileName := "F:/tbMROData.csv"
+	//fileType := c.PostForm("fileType")
 	go func() {
 		proc = 0
-		fileName := "/Users/jaylon_ho/Downloads/tbMROData.csv"
+		// fileName := "/Users/jaylon_ho/Downloads/tbMROData.csv"
 		fileType := "csv"
 		if (fileType == "csv") {
 			fs, err := os.Open(fileName)

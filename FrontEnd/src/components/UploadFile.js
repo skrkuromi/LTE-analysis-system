@@ -119,7 +119,7 @@ class UploadFile extends Component {
     getProcess = async () => {
         const self = this;
         setTimeout(async function () {
-            const res = await fetchTool('GET', '/tbC2Inew/Query_Process', {});
+            const res = await fetchTool('GET', '/QueryLoadProcess', {});
             if (res.status === undefined) {
                 if (res.msg > 0 && self.state.loading === true) {
                     self.setState({ loading: false })
@@ -142,8 +142,20 @@ class UploadFile extends Component {
 
     uploadFile = async () => {
         const { tableName, filePath, fileType } = this.state;
+        console.log(filePath)
 
-        const result = await fetchTool('GET', `/${tableName}/upload_rows`,
+        if (tableName === undefined) {
+            alert("请选择表名称!");
+            return
+        } else if (filePath === undefined) {
+            alert("请选择文件路径!");
+            return
+        } else if (fileType === undefined) {
+            alert("请选择文件类型!");
+            return
+        }
+
+        const result = await fetchTool('POST', '/upload',
             {
                 tableName,
                 filePath,
@@ -187,7 +199,7 @@ class UploadFile extends Component {
                             <Option value="tbCell">tbCell</Option>
                             <Option value="tbKPI">tbKPI</Option>
                             <Option value="tbPRB">tbPRB</Option>
-                            <Option value="tbMROData">tbMROData</Option>
+                            <Option value="tbMRO">tbMROData</Option>
                         </Select>
                         {/* <Upload beforeUpload={this.beforeUpload}>
                             <Button loading={loading} >

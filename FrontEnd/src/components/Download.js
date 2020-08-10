@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Select, Progress, Space, Input } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
+import { fetchTool } from '../utils/fetch';
 
 const { Option } = Select;
 
@@ -19,41 +20,6 @@ class Download extends React.Component {
         })
     }
 
-    //将数据转化为文件所用格式
-    makeFile = (e) => {
-        e.stopPropagation();
-
-        // const { status, filePathUpload, file } = this.props;
-        // const { fileName, path } = file;
-        // const filePath = path === undefined ? filePathUpload + fileName : path;
-
-        // const url = `/experiment-service/query/readyForData?filePath=${filePath}`;
-
-        // const response = await fetchTool(url, init);
-
-        // if (response && response.status === 200) {
-        //     const data = await response.text();
-        //     this.downFile(data, fileName);
-        // }
-
-        this.downFile('', 'fileName');
-    }
-
-    //提供下载
-    downFile = (list, label) => {
-        console.log('download')
-        var element = document.createElement('a');
-        element.download = `${label}.csv`;
-        element.style.display = 'none';
-        var blob = new Blob([list], {
-            type: "text/csv;charset=utf-8;"
-        });
-        element.href = URL.createObjectURL(blob);
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    }
-
     onChangePath = (e) => {
         this.setState({
             filePath: e.target.value
@@ -68,6 +34,65 @@ class Download extends React.Component {
         this.setState({
             fileName: e.target.value
         })
+    }
+
+    getProcess = async () => {
+        const self = this;
+        setTimeout(async function () {
+            const res = await fetchTool('GET', '/QueryDownloadProcess', {});
+            if (res.status === undefined) {
+                if (res.msg > 0 && self.state.loading === true) {
+                    self.setState({ loading: false })
+                }
+
+                if (res.msg === 100) {
+                    self.setState({ percent: res.msg });
+                    alert("导出成功");
+                } else {
+                    self.setState({ percent: res.msg });
+                    console.log(res.msg)
+                    self.getProcess();
+                }
+            } else {
+                self.setState({ percent: 0, loading: false });
+                alert("执行出错");
+                return;
+            }
+        }, 1000);
+    }
+
+    uploadFile = async () => {
+        const { tableName, filePath, fileName } = this.state;
+
+        if (tableName === undefined) {
+            alert("请选择表名称!");
+            return
+        } else if (filePath === undefined) {
+            alert("请选择文件路径!");
+            return
+        }
+
+        const result = await fetchTool('POST', '/download',
+            {
+                tableName,
+                filePath,
+                fileName
+            });
+        if (result.status === undefined) {
+            if (result.msg === 'success') {
+                this.setState({
+                    percent: 0
+                })
+                this.getProcess();
+            } else {
+                this.setState({
+                    percent: 0
+                })
+                alert("执行错误");
+            }
+        } else {
+            alert("执行错误");
+        }
     }
 
     render() {
