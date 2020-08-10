@@ -16,6 +16,7 @@ func main() {
 	r.POST("/upload", api.Upload)
 	r.POST("/download", api.Download)
 	r.GET("/QueryLoadProcess", api.GetLoadProcess)
+	r.GET("/QueryDownloadProcess", api.GetDownLoadProcess)
 	tbcell := r.Group("/tbcell")
 	{
 		tbcell.GET("/sector_id", api.QueryAllSectorId)

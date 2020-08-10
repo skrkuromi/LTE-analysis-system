@@ -4,17 +4,23 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"server/models"
 	"os"
+	"server/models"
 	"strconv"
 )
+
+var progress = 0
+
+func GetDownLoadProcess(c *gin.Context) {
+	c.JSON(200, gin.H{"msg": progress})
+}
 
 func Download(c *gin.Context) {
 
 	// f, err := os.OpenFile("/Users/ddrid/Downloads/xxx/test.csv", os.O_RDWR|os.O_CREATE, 0766)
 	f, err := os.OpenFile("F:/test.csv", os.O_RDWR|os.O_CREATE, 0766)
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -26,10 +32,14 @@ func Download(c *gin.Context) {
 
 	tbMROs := models.DownloadFile(fileName)
 	var data = make([][]string, len(tbMROs)+1)
-	data[0] = []string{"TimeStamp", "ServingSector", "InterferingSector", 
-	"LteScRSRP", "LteNcRSRP", "LteNcEarfcn", "LteNcPci"}
+	data[0] = []string{"TimeStamp", "ServingSector", "InterferingSector",
+		"LteScRSRP", "LteNcRSRP", "LteNcEarfcn", "LteNcPci"}
 
+	length := len(tbMROs)
+	count := 0
 	for i, mro := range tbMROs {
+		count++
+		progress = count / length * 100
 		data[i+1] = []string{
 			mro.TimeStamp,
 			mro.ServingSector,
