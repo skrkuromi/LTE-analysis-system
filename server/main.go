@@ -15,6 +15,7 @@ func main() {
 	r.POST("/register", api.Register)
 	r.POST("/upload", api.Upload)
 	r.POST("/download", api.Download)
+	r.GET("/QueryLoadProcess", api.GetLoadProcess)
 	tbcell := r.Group("/tbcell")
 	{
 		tbcell.GET("/sector_id", api.QueryAllSectorId)
@@ -26,7 +27,7 @@ func main() {
 		tbcell.GET("/query_by_enodeb_id", api.QueryInfoByEnodebId)
 		tbcell.GET("/query_by_enodeb_name", api.QueryInfoByEnodebName)
 	}
-    tbKPI := r.Group("/tbKPI")
+	tbKPI := r.Group("/tbKPI")
 	{
 		tbKPI.GET("/allKPIInfo", api.QueryAllKPIInfo)
 		tbKPI.GET("/QueryAllKPISector", api.QueryAllKPISector)
