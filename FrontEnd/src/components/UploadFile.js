@@ -11,7 +11,8 @@ class UploadFile extends Component {
         loading: false,
         percent: 0,
         tableName: undefined,
-        path: undefined
+        filePath: undefined,
+        fileType: undefined
     }
 
     // uploadRows = async (array, count, total) => {
@@ -101,9 +102,9 @@ class UploadFile extends Component {
     //     return false;
     // }
 
-    onChangePath = (value) => {
+    onChangePath = (e) => {
         this.setState({
-            path: value
+            filePath: e.target.value
         })
     }
 
@@ -111,15 +112,49 @@ class UploadFile extends Component {
         this.setState({ tableName: value });
     }
 
-    uploadFile = async () => {
-        const { tableName, path } = this.state;
+    handleChangeFileType = (value) => {
+        this.setState({ fileType: value });
+    }
 
-        const result = await fetchTool('GET', `/${tableName}/upload_rows`, { tableName, pathName: path });
+    getProcess = async () => {
+        const self = this;
+        setTimeout(async function () {
+            const res = await fetchTool('GET', '/tbC2Inew/Query_Process', {});
+            if (res.status === undefined) {
+                if (res.msg > 0 && self.state.loading === true) {
+                    self.setState({ loading: false })
+                }
+
+                if (res.msg === 100) {
+                    self.setState({ percent: res.msg });
+                    alert("导入成功");
+                } else {
+                    self.setState({ percent: res.msg });
+                    self.getProcess();
+                }
+            } else {
+                self.setState({ percent: 0, loading: false });
+                alert("执行出错");
+                return;
+            }
+        }, 1000);
+    }
+
+    uploadFile = async () => {
+        const { tableName, filePath, fileType } = this.state;
+
+        const result = await fetchTool('GET', `/${tableName}/upload_rows`,
+            {
+                tableName,
+                filePath,
+                fileType
+            });
         if (result.status === undefined) {
             if (result.msg === 'success') {
                 this.setState({
                     percent: 0
                 })
+                this.getProcess();
             } else {
                 this.setState({
                     percent: 0
@@ -132,22 +167,22 @@ class UploadFile extends Component {
     }
 
     render() {
-        const { percent, loading, path } = this.state;
+        const { percent, loading, filePath } = this.state;
 
         return (
             <div>
                 <div>
                     <Space>
                         <Input
-                            placeholder="Basic usage"
-                            style={{ width: 400, marginRight: 10 }}
-                            value={path}
+                            placeholder="FilePath"
+                            style={{ width: 350, marginRight: 10 }}
+                            value={filePath}
                             onChange={this.onChangePath}
                         />
                         <Select
                             style={{ width: 200, marginRight: 10 }}
                             onChange={this.handleChange}
-                            placeholder="Select TableName"
+                            placeholder="TableName"
                         >
                             <Option value="tbCell">tbCell</Option>
                             <Option value="tbKPI">tbKPI</Option>
@@ -159,8 +194,16 @@ class UploadFile extends Component {
                                 <UploadOutlined /> Click to Upload
                             </Button>
                         </Upload> */}
+                        <Select
+                            style={{ width: 100, marginRight: 10 }}
+                            onChange={this.handleChangeFileType}
+                            placeholder="FileType"
+                        >
+                            <Option value="csv">csv</Option>
+                            <Option value="xlsx">xlsx</Option>
+                        </Select>
                         <Button loading={loading} onClick={this.uploadFile} >
-                            <UploadOutlined /> Click to Upload
+                            <UploadOutlined /> 上传文件
                         </Button>
                     </Space>
 
