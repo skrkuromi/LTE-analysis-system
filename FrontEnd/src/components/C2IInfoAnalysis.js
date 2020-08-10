@@ -1,57 +1,57 @@
 import React from 'react';
-import { Button, Space } from 'antd';
+import { Button, Space, InputNumber } from 'antd';
 import MyTable from '../utils/MyTable';
 import { fetchTool } from '../utils/fetch';
 
 class C2IInfoAnalysis extends React.Component {
     state = {
         data: [],
-        value: undefined,
+        percent: 50,
+    }
+
+    onChange = (value) => {
+        this.setState({ percent: value });
     }
 
     handleClickQuery = async () => {
-        const res = await fetchTool('GET', '/tbC2Inew/query_tripleSector', {});
-        console.log(res);
+        const { percent } = this.state;
+        const result = await fetchTool('GET', '/tbC2Inew/Query_tripleSector', { percent: percent / 100.0 });
+        if (result.status === undefined) {
+            const sector = result.msg || [];
+            for (let i in sector) {
+                const value = sector[i];
+                value['key'] = i;
+            }
+            this.setState({ data: sector });
+        } else {
+            alert("查询失败");
+        }
     }
 
     render() {
-        const { data } = this.props;
-        const dataSource = [
-            {
-                key: 1,
-                name: '胡彦斌',
-                age: 32,
-                address: '西湖区湖底公园1号',
-            },
-            {
-                key: 2,
-                name: '胡彦祖',
-                age: 42,
-                address: '西湖区湖底公园1号',
-            },
-        ];
-        const columns = [
-            {
-                title: '姓名',
-                dataIndex: 'name',
-                key: 'name',
-            },
-            {
-                title: '年龄',
-                dataIndex: 'age',
-                key: 'age',
-            },
-            {
-                title: '住址',
-                dataIndex: 'address',
-                key: 'address',
-            },
-        ];
+        const { data } = this.state;
+        const columns = [];
+        for (let value in data[0] || {}) {
+            if (value === "key") continue;
+            columns.push({
+                title: value,
+                dataIndex: value,
+                key: value
+            })
+        }
+
         return (
             <div>
                 <div>
                     <Space>
-
+                        <InputNumber
+                            defaultValue={50}
+                            min={0}
+                            max={100}
+                            formatter={value => `${value}%`}
+                            parser={value => value.replace('%', '')}
+                            onChange={this.onChange}
+                        />
                         <Button onClick={this.handleClickQuery}>查询重叠覆盖三元组</Button>
                     </Space>
                 </div>

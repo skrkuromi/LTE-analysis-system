@@ -180,7 +180,7 @@ class PRBInfoQuery extends React.Component {
         });
 
         if (result.status === undefined) {
-            sector = result.msg;
+            sector = result.msg || [];
         }
 
         for (let i = 0; i < sector.length; i++) {

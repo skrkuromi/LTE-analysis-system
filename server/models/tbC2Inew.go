@@ -45,10 +45,6 @@ func GetC2I_MeanStd()(info []tbC2Inew){
 		db.Exec(sql, info[i].SCELL, info[i].NCELL, info[i].C2I_Mean, info[i].STD, info[i].Prb9, info[i].PrbABS6)
 		temp := int((float64(i)/float64(len(info)))*100)
 		pro = temp
-		fmt.Println("--------------")
-		fmt.Println(i)
-		fmt.Println(len(info))
-		fmt.Println(pro)
 	}
 	pro = 100
 
@@ -93,7 +89,7 @@ func CalPrb(info []tbC2Inew){
 
 func GetTriplePerfect(percent string)(res []tripleSector){
 	var info []tbC2Inew
-	sqlString := "select * from tbC2Inew where PrbABS6 > ?"
+	sqlString := "select * from tbC2Inew where PrbABS6 >= ?"
 
 	if err := db.Select(&info, sqlString, percent); err != nil {
 		log.Fatal(err.Error())

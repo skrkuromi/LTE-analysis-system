@@ -72,5 +72,4 @@ func Upload(c *gin.Context) {
 		}
 		fmt.Println(count)
 	}
-
 }

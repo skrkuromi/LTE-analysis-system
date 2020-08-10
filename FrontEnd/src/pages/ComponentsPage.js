@@ -15,7 +15,7 @@ import {
     KPIInfoQuery,
     PRBInfoQuery,
     PRBInfoStatistics,
-    UploadTest
+    UploadFile
 } from '../components';
 import { loginValues, loginInit } from '../utils/login.js';
 
@@ -23,7 +23,7 @@ const { SubMenu } = Menu;
 
 class ComponentsPage extends React.Component {
     state = {
-        key: '3'
+        key: '1'
     }
 
     handleClick = e => {
@@ -32,7 +32,7 @@ class ComponentsPage extends React.Component {
 
     selectContent = () => {
         switch (this.state.key) {
-            case '1': return <UploadTest></UploadTest>;
+            case '1': return <UploadFile></UploadFile>;
             case '2': return <Download></Download>;
             case '3': return <CellInfoQuery></CellInfoQuery>;
             case '4': return <ENodeBInfoQuery></ENodeBInfoQuery>;
