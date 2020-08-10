@@ -43,7 +43,7 @@ func Upload(c *gin.Context) {
 		// 按行读取
 		r = csv.NewReader(fs)
 		for {
-			row, err := r.Read()
+			_, err := r.Read()
 			if err != nil && err != io.EOF {
 				log.Fatalf("can not read, err is %+v", err)
 			}

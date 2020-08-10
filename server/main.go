@@ -14,6 +14,7 @@ func main() {
 	r.POST("/login", api.Login)
 	r.POST("/register", api.Register)
 	r.POST("/upload", api.Upload)
+	r.POST("/download", api.Download)
 	tbcell := r.Group("/tbcell")
 	{
 		tbcell.GET("/sector_id", api.QueryAllSectorId)
