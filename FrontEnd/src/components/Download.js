@@ -1,12 +1,17 @@
 import React from 'react';
-import { Button, Select } from 'antd';
+import { Button, Select, Progress, Space, Input } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 class Download extends React.Component {
     state = {
-        tableName: null
+        loading: false,
+        percent: 0,
+        tableName: undefined,
+        filePath: undefined,
+        fileType: undefined,
+        fileName: undefined
     }
 
     onChange = (value) => {
@@ -50,30 +55,74 @@ class Download extends React.Component {
         document.body.removeChild(element);
     }
 
+    onChangePath = (e) => {
+        this.setState({
+            filePath: e.target.value
+        })
+    }
+
+    handleChange = (value) => {
+        this.setState({ tableName: value });
+    }
+
+    handleChangeFileType = (value) => {
+        this.setState({ fileType: value });
+    }
+
+    onChangeFileName = (e) => {
+        this.setState({
+            fileName: e.target.value
+        })
+    }
+
     render() {
-        console.log(this.state.tableName)
+        const { loading, percent, fileName, filePath } = this.state;
         return (
             <div>
-                <Select
-                    showSearch
-                    style={{ width: 200, marginRight: 20 }}
-                    placeholder="Select tableName"
-                    optionFilterProp="children"
-                    onChange={this.onChange}
-                    filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                >
-                    <Option value="jack">Jack</Option>
-                    <Option value="jack">Jack</Option>
-                    <Option value="jack">Jack</Option>
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="tom">Tom</Option>
-                </Select>
-                <Button onClick={this.makeFile} icon={<DownloadOutlined />}>
-                    Download
-                </Button>
+                <div>
+                    <Space>
+                        <Input
+                            placeholder="FileName"
+                            style={{ width: 100, marginRight: 10 }}
+                            value={fileName}
+                            onChange={this.onChangeFileName}
+                        />
+                        <Input
+                            placeholder="FilePath"
+                            style={{ width: 350, marginRight: 10 }}
+                            value={filePath}
+                            onChange={this.onChangePath}
+                        />
+                        <Select
+                            style={{ width: 200, marginRight: 10 }}
+                            onChange={this.handleChange}
+                            placeholder="TableName"
+                        >
+                            <Option value="tbCell">tbCell</Option>
+                            <Option value="tbKPI">tbKPI</Option>
+                            <Option value="tbPRB">tbPRB</Option>
+                            <Option value="tbMROData">tbMROData</Option>
+                        </Select>
+                        <Select
+                            style={{ width: 100, marginRight: 10 }}
+                            onChange={this.handleChangeFileType}
+                            placeholder="FileType"
+                        >
+                            <Option value="csv">csv</Option>
+                            <Option value="xlsx">xlsx</Option>
+                        </Select>
+                        <Button loading={loading} onClick={this.uploadFile} >
+                            <DownloadOutlined /> 下载文件
+                        </Button>
+                    </Space>
+
+                </div>
+                <div>
+                    <div style={{ paddingTop: 50 }}>
+                        {percent === 100 ? <Progress percent={percent} style={{ width: 800 }} />
+                            : <Progress percent={percent} status="active" style={{ width: 800 }} />}
+                    </div>
+                </div>
             </div>
         );
     }
