@@ -22,5 +22,3 @@ func InsertNewUser(user User) {
 		log.Fatal(err.Error())
 	}
 }
-
-

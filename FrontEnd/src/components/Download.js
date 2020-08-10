@@ -10,7 +10,6 @@ class Download extends React.Component {
         percent: 0,
         tableName: undefined,
         filePath: undefined,
-        fileType: undefined,
         fileName: undefined
     }
 
@@ -65,10 +64,6 @@ class Download extends React.Component {
         this.setState({ tableName: value });
     }
 
-    handleChangeFileType = (value) => {
-        this.setState({ fileType: value });
-    }
-
     onChangeFileName = (e) => {
         this.setState({
             fileName: e.target.value
@@ -89,12 +84,12 @@ class Download extends React.Component {
                         />
                         <Input
                             placeholder="FilePath"
-                            style={{ width: 350, marginRight: 10 }}
+                            style={{ width: 400, marginRight: 10 }}
                             value={filePath}
                             onChange={this.onChangePath}
                         />
                         <Select
-                            style={{ width: 200, marginRight: 10 }}
+                            style={{ width: 120, marginRight: 10 }}
                             onChange={this.handleChange}
                             placeholder="TableName"
                         >
@@ -102,14 +97,6 @@ class Download extends React.Component {
                             <Option value="tbKPI">tbKPI</Option>
                             <Option value="tbPRB">tbPRB</Option>
                             <Option value="tbMROData">tbMROData</Option>
-                        </Select>
-                        <Select
-                            style={{ width: 100, marginRight: 10 }}
-                            onChange={this.handleChangeFileType}
-                            placeholder="FileType"
-                        >
-                            <Option value="csv">csv</Option>
-                            <Option value="xlsx">xlsx</Option>
                         </Select>
                         <Button loading={loading} onClick={this.uploadFile} >
                             <DownloadOutlined /> 下载文件

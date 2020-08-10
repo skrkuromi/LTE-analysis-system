@@ -128,7 +128,7 @@ class ENodeBInfoQuery extends React.Component {
                     <Button onClick={this.handleClickQuery}>查询</Button>
                 </div>
                 <div style={{ paddingTop: 50 }}>
-                    <MyTable columns={columns} data={data}></MyTable>
+                    <MyTable columns={columns} data={data} parent='EnodeB' ></MyTable>
                 </div>
             </div>
         );
