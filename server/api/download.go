@@ -40,9 +40,16 @@ func Download(c *gin.Context) {
 
 		length := len(tbMROs)
 		count := 0
+		temp := 0
+		fmt.Println(length)
 		for i, mro := range tbMROs {
 			count++
-			progress = count / length * 100
+			temp = int((float64(count) / float64(length))*100)
+			if count % 5 == 0 {
+				fmt.Println(progress)
+			}
+			progress = temp
+
 			data[i+1] = []string{
 				mro.TimeStamp,
 				mro.ServingSector,
@@ -50,7 +57,8 @@ func Download(c *gin.Context) {
 				strconv.Itoa(mro.LteScRSRP),
 				strconv.Itoa(mro.LteNcRSRP),
 				strconv.Itoa(mro.LteNcEarfcn),
-				strconv.Itoa(mro.LteNcPci)}
+				strconv.Itoa(mro.LteNcPci),
+			}
 		}
 
 		w.WriteAll(data)

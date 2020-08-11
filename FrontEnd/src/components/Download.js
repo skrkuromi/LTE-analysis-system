@@ -50,7 +50,6 @@ class Download extends React.Component {
                     alert("导出成功");
                 } else {
                     self.setState({ percent: res.msg });
-                    console.log(res.msg)
                     self.getProcess();
                 }
             } else {

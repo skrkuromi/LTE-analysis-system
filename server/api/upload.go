@@ -24,6 +24,7 @@ func Upload(c *gin.Context) {
 	//fileType := c.PostForm("fileType")
 	go func() {
 		proc = 0
+		partition := 5000
 		// fileName := "/Users/jaylon_ho/Downloads/tbMROData.csv"
 		fileType := "csv"
 		if (fileType == "csv") {
@@ -87,13 +88,12 @@ func Upload(c *gin.Context) {
 				if err == io.EOF {
 					proc = 100
 					fmt.Println("complete")
-					//fmt.Println(sqlString)
 					models.InsertData(sqlString)
 					break
 				}
 				row_count = row_count + 1
 				temp := ""
-				if row_count%50 != 1 {
+				if row_count % partition != 1 {
 					temp += ",("
 				} else {
 					temp += "("
@@ -118,11 +118,9 @@ func Upload(c *gin.Context) {
 				temp += ")"
 				sqlString += temp
 
-				if row_count%50 == 0 {
+				if row_count % partition == 0 {
 					tem := int((float64(row_count)/float64(count))*100)
 					proc = tem
-					fmt.Println(row_count)
-					//fmt.Println(sqlString)
 					models.InsertData(sqlString)
 					sqlString = ""
 					sqlString += startString
@@ -139,13 +137,8 @@ func Upload(c *gin.Context) {
 
 			rows := f.GetRows("Sheet1")
 			for _, _ = range rows {
-				//for _, colCell := range row {
-				//	fmt.Print(colCell, "\t")
-				//}
 				count++
-				//fmt.Println(row)
 			}
-			fmt.Println(count)
 		}
 	}()
 	c.JSON(200, gin.H{"msg": "success"})
